@@ -99,7 +99,9 @@ select option{background:#1e293b}
 .overlay.open{opacity:1;pointer-events:all}
 /* When embedded in an iframe, position overlay near the clicked card */
 body.in-iframe .overlay{position:absolute;inset:auto 0 auto 0;height:auto;min-height:auto;align-items:flex-start;padding:20px 16px}
-body.in-iframe .overlay.open{}
+body.in-iframe .modal{max-height:none;height:auto;width:min(560px,96vw);border-radius:18px;border:1px solid rgba(245,166,35,.25)}
+body.in-iframe .hero{min-height:540px}
+body.in-iframe .modal-body{max-height:60vh}
 
 /* ── MODAL CARD ── */
 .modal{width:min(560px,96vw);max-height:92vh;background:linear-gradient(160deg,#1a1a1a,#141414);
@@ -355,10 +357,13 @@ body.in-iframe .overlay.open{}
 
 
 @media(max-width:480px){
-  .modal{width:100vw;max-height:100vh;height:100vh;border-radius:0;border:none}
-  .overlay{align-items:stretch}
-  .overlay.open .modal{transform:none}
-  .hero{min-height:calc(100vh - 46px)}
+  body:not(.in-iframe) .modal{width:100vw;max-height:100vh;height:100vh;border-radius:0;border:none}
+  body:not(.in-iframe) .overlay{align-items:stretch}
+  body:not(.in-iframe) .overlay.open .modal{transform:none}
+  body:not(.in-iframe) .hero{min-height:calc(100vh - 46px)}
+  body.in-iframe .modal{width:96vw;border-radius:14px}
+  body.in-iframe .hero{min-height:420px}
+  body.in-iframe .modal-body{max-height:55vh}
   .hero-name{font-size:26px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:8px 14px 32px}
   .pc{height:210px}
