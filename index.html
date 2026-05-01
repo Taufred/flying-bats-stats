@@ -97,6 +97,9 @@ select option{background:#1e293b}
   z-index:1000;display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity .25s}
 .overlay.open{opacity:1;pointer-events:all}
+/* When embedded in an iframe, position overlay near the clicked card */
+body.in-iframe .overlay{position:absolute;inset:auto 0 auto 0;height:auto;min-height:auto;align-items:flex-start;padding:20px 16px}
+body.in-iframe .overlay.open{}
 
 /* ── MODAL CARD ── */
 .modal{width:min(560px,96vw);max-height:92vh;background:linear-gradient(160deg,#1a1a1a,#141414);
@@ -516,6 +519,9 @@ var GAMES = [
   }
 ];
 
+// Detect iframe embedding (e.g. on Wix)
+try { if(window.self!==window.top) document.body.classList.add('in-iframe'); } catch(e){ document.body.classList.add('in-iframe'); }
+
 // ── helpers ──
 function a3(v){ return v>0?'.'+String(Math.round(v*1000)).padStart(3,'0'):'-'; }
 function ini(n){ return n.split(' ').filter(function(w){return w&&w[0]!='(';}).slice(0,2).map(function(w){return w[0];}).join(''); }
@@ -542,7 +548,7 @@ function buildThumb(p){
   var n=p.num, hasStats=p.games>0;
   var imgHtml='<img src="'+n+'.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block" onerror="this.style.display=\'none\'">';
   var holoCls=p.mvp_pts>0?' holo':'';
-  return '<div class="pc'+holoCls+'" onclick="openModal('+n+')" onmousemove="holoMove(event,this)" onmouseleave="holoReset(this)">'+
+  return '<div class="pc'+holoCls+'" onclick="openModal('+n+',event)" onmousemove="holoMove(event,this)" onmouseleave="holoReset(this)">'+
     '<div class="pc-bg">'+imgHtml+'</div>'+
     '<div class="pc-ini">'+ini(p.name)+'</div>'+
     '<div class="pc-grad"></div>'+
@@ -566,7 +572,7 @@ function buildThumb(p){
 var currentTab=0;
 var currentPlayer=null;
 
-function openModal(num){
+function openModal(num,evt){
   var p=null;
   for(var i=0;i<PL.length;i++){if(PL[i].num===num){p=PL[i];break;}}
   if(!p) return;
@@ -578,12 +584,34 @@ function openModal(num){
   buildTabHighlights(p);
 
   showTab(0);
-  document.getElementById('overlay').classList.add('open');
-  document.body.style.overflow='hidden';
+  var ov=document.getElementById('overlay');
+  ov.classList.add('open');
+
+  // If embedded in iframe: position overlay near click + scroll modal into view
+  if(document.body.classList.contains('in-iframe')){
+    var clickedY=null;
+    if(evt&&evt.currentTarget){
+      var r=evt.currentTarget.getBoundingClientRect();
+      clickedY=r.top+(window.pageYOffset||document.documentElement.scrollTop||0);
+    }
+    if(clickedY!==null){
+      ov.style.top=Math.max(0,clickedY-40)+'px';
+    } else {
+      ov.style.top=(window.pageYOffset||0)+'px';
+    }
+    setTimeout(function(){
+      var m=document.getElementById('modal');
+      if(m&&m.scrollIntoView) m.scrollIntoView({block:'center',behavior:'smooth'});
+    },60);
+  } else {
+    document.body.style.overflow='hidden';
+  }
 }
 
 function closeModal(){
-  document.getElementById('overlay').classList.remove('open');
+  var ov=document.getElementById('overlay');
+  ov.classList.remove('open');
+  ov.style.top='';
   document.body.style.overflow='';
   // Stop any playing videos
   document.getElementById('tab3').innerHTML='';
@@ -822,7 +850,7 @@ function renderGameLog(){
         '<span class="gl-mvp-tag">MVP</span>'+
         '<span class="gl-mvp-name">#'+mvp.num+' '+mvp.name.split('(')[0].trim()+'</span></div>';
     }
-    return '<div class="gl-card '+cls+'" onclick="openGameModal('+g.id+')">'+
+    return '<div class="gl-card '+cls+'" onclick="openGameModal('+g.id+',event)">'+
       '<div class="gl-meta"><span>'+dStr+' &middot; '+venue+'</span><span>'+(g.liga||'')+'</span></div>'+
       '<div class="gl-result">'+
         '<div class="gl-wl '+cls+'">'+wl+'</div>'+
@@ -842,7 +870,7 @@ function renderGameLog(){
 }
 
 // ── GAME MODAL ──
-function openGameModal(id){
+function openGameModal(id,evt){
   var g=null;
   for(var i=0;i<GAMES.length;i++){if(GAMES[i].id===id){g=GAMES[i];break;}}
   if(!g) return;
@@ -908,11 +936,27 @@ function openGameModal(id){
       videoHtml+
     '</div>';
   document.getElementById('gameModalBody').innerHTML=html;
-  document.getElementById('gameOverlay').classList.add('open');
-  document.body.style.overflow='hidden';
+  var gov=document.getElementById('gameOverlay');
+  gov.classList.add('open');
+  if(document.body.classList.contains('in-iframe')){
+    var clickedY=null;
+    if(evt&&evt.currentTarget){
+      var r=evt.currentTarget.getBoundingClientRect();
+      clickedY=r.top+(window.pageYOffset||document.documentElement.scrollTop||0);
+    }
+    gov.style.top=(clickedY!==null?Math.max(0,clickedY-40):window.pageYOffset||0)+'px';
+    setTimeout(function(){
+      var m=document.getElementById('gameModal');
+      if(m&&m.scrollIntoView) m.scrollIntoView({block:'center',behavior:'smooth'});
+    },60);
+  } else {
+    document.body.style.overflow='hidden';
+  }
 }
 function closeGameModal(){
-  document.getElementById('gameOverlay').classList.remove('open');
+  var gov=document.getElementById('gameOverlay');
+  gov.classList.remove('open');
+  gov.style.top='';
   document.body.style.overflow='';
   document.getElementById('gameModalBody').innerHTML='';
 }
