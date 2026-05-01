@@ -460,6 +460,346 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 
 .empty-state{grid-column:1/-1;text-align:center;padding:64px;color:#334155;font-size:14px}
 
+/* ── PACK SECTION ── */
+.snav-pack{color:#ffd700!important;text-shadow:0 0 8px rgba(255,215,0,.4)}
+.pack-wrap{max-width:1200px;margin:0 auto;padding:8px 20px 40px}
+.pack-hero{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 0 8px}
+
+/* Pack visual */
+.pack-art{width:240px;height:340px;border-radius:18px;position:relative;cursor:default;overflow:hidden;
+  background:linear-gradient(160deg,#0a0a0a 0%,#1a1a1a 35%,#262626 65%,#0a0a0a 100%);
+  border:2px solid rgba(255,215,0,.45);
+  box-shadow:0 16px 48px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,215,0,.2),0 0 32px rgba(255,215,0,.15);
+  transform:perspective(800px) rotateX(8deg);transition:transform .3s,box-shadow .3s;animation:pack-idle 3.5s ease-in-out infinite}
+.pack-art:hover{transform:perspective(800px) rotateX(0deg) scale(1.02);box-shadow:0 24px 64px rgba(0,0,0,.8),0 0 64px rgba(255,215,0,.35)}
+@keyframes pack-idle{0%,100%{transform:perspective(800px) rotateX(8deg) rotateY(0deg)}50%{transform:perspective(800px) rotateX(8deg) rotateY(-4deg)}}
+.pack-bat{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:120px;opacity:.18;filter:drop-shadow(0 4px 16px rgba(255,215,0,.5))}
+.pack-foil-shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,215,0,.3) 47%,rgba(255,255,255,.5) 50%,rgba(255,215,0,.3) 53%,transparent 70%);background-size:200% 200%;animation:foil-sweep 5s linear infinite;mix-blend-mode:overlay;pointer-events:none}
+.pack-text{position:absolute;left:0;right:0;text-align:center;font-family:'Oswald',sans-serif}
+.pack-text-top{position:absolute;top:30px;left:0;right:0;font-size:14px;letter-spacing:5px;color:rgba(255,215,0,.85);font-weight:600}
+.pack-text-mid{position:absolute;top:55px;left:0;right:0;font-size:28px;letter-spacing:2px;color:#ffd700;font-weight:800;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.pack-text-bot{position:absolute;bottom:30px;left:0;right:0;font-size:11px;letter-spacing:4px;color:rgba(255,255,255,.4);font-weight:600}
+
+/* Open button */
+.pack-open-btn{padding:14px 38px;background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:14px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  border:none;border-radius:30px;cursor:pointer;transition:.2s;box-shadow:0 8px 24px rgba(255,215,0,.35)}
+.pack-open-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,215,0,.55)}
+.pack-open-btn:disabled{background:linear-gradient(135deg,#475569,#334155);color:#94a3b8;cursor:not-allowed;box-shadow:none}
+.pack-cooldown{font-size:11px;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;text-align:center;min-height:14px}
+
+/* Reveal area */
+.pack-reveal{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:30px 0;min-height:0;perspective:1500px}
+.pack-reveal:empty{display:none}
+
+/* Trading card (used both in reveal + collection) */
+.tc-mini{width:200px;aspect-ratio:5/7;border-radius:14px;position:relative;overflow:hidden;
+  background:#0a0a0a;border:2px solid rgba(245,166,35,.25);box-shadow:0 8px 24px rgba(0,0,0,.6);
+  transform-style:preserve-3d}
+.tc-mini.locked{border-color:rgba(255,255,255,.06);background:linear-gradient(160deg,#0d0d0d,#1a1a1a)}
+.tc-mini-photo{position:absolute;top:0;left:0;right:0;height:65%;overflow:hidden;background:linear-gradient(160deg,#1a1a1a,#262626);z-index:1}
+.tc-mini-photo img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+/* Placeholder for players without photo */
+.tc-mini-photo.no-photo{display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#1a1a1a 0%,#262626 50%,#1a1a1a 100%)}
+.tc-mini-photo.no-photo .ph-bg{position:absolute;inset:0;
+  background:url(logo.png) center 35%/45% no-repeat;opacity:.12;filter:grayscale(.4)}
+.tc-mini-photo.no-photo .ph-num{position:relative;font-family:'Oswald',sans-serif;
+  font-size:64px;font-weight:700;color:rgba(255,215,0,.55);letter-spacing:-2px;line-height:1;
+  text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.tc-mini-grad{position:absolute;top:0;left:0;right:0;height:65%;z-index:2;
+  background:linear-gradient(to bottom,rgba(10,10,10,0) 50%,rgba(10,10,10,.95) 100%)}
+.tc-mini-num{position:absolute;top:8px;left:10px;font-family:'Oswald',sans-serif;font-size:36px;font-weight:700;color:rgba(255,255,255,.18);line-height:.85;z-index:3}
+.tc-mini-info{position:absolute;left:10px;right:10px;bottom:8px;z-index:3}
+.tc-mini-name{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;line-height:1.15;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.tc-mini-sub{font-size:9px;color:#94a3b8;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.tc-mini-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;margin-top:6px}
+.tc-mini-stat{background:rgba(0,0,0,.55);backdrop-filter:blur(6px);border-radius:5px;padding:3px 4px;text-align:center;border:1px solid rgba(255,215,0,.12)}
+.tc-mini-stat-v{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#ffd700;line-height:1}
+.tc-mini-stat-l{font-size:7px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+
+/* Foil variant */
+.tc-mini.foil{border-color:rgba(168,85,247,.55);box-shadow:0 8px 28px rgba(168,85,247,.35),inset 0 0 0 1px rgba(255,255,255,.1)}
+.tc-mini.foil::before{content:'';position:absolute;inset:0;border-radius:12px;pointer-events:none;z-index:4;
+  background:conic-gradient(from var(--ha,0deg),rgba(255,0,200,.5),rgba(255,215,0,.5),rgba(0,255,213,.5),rgba(168,85,247,.5),rgba(255,0,200,.5));
+  mix-blend-mode:overlay;opacity:.55;animation:foil-rotate 5s linear infinite}
+@keyframes foil-rotate{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+.tc-mini.foil .tc-mini-tag{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff}
+
+/* Specials — photo fills more of the card to avoid empty black space */
+.tc-mini.special .tc-mini-photo{height:82%}
+.tc-mini.special .tc-mini-grad{height:82%;background:linear-gradient(to bottom,rgba(10,10,10,0) 60%,rgba(10,10,10,.95) 95%,#0a0a0a 100%)}
+.tc-mini.special .tc-mini-info{bottom:8px}
+.tc-mini.special .tc-mini-name{font-size:13px;line-height:1.1}
+.tc-mini.special .tc-mini-sub{margin-top:3px;font-size:9px}
+.tc-mini-icon{font-size:30px!important;color:rgba(255,255,255,.7)!important;letter-spacing:0!important;line-height:1!important}
+
+/* Specials */
+.tc-mini.special.coach{border-color:#06b6d4;box-shadow:0 8px 28px rgba(6,182,212,.4)}
+.tc-mini.special.coach .tc-mini-photo{background:linear-gradient(160deg,#0c4a6e,#0e7490)}
+.tc-mini.special.coach::after{content:'COACH';position:absolute;top:8px;right:-32px;background:#06b6d4;color:#0a0a0a;font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tc-mini.special.coach .tc-mini-stats{display:none}
+.tc-mini.special.coach .tc-mini-sub{color:#67e8f9}
+
+.tc-mini.special.fire{border-color:#f97316;
+  background:linear-gradient(160deg,#7c2d12,#0a0a0a 40%) padding-box,
+  linear-gradient(135deg,#f97316,#dc2626,#fbbf24,#f97316) border-box;border:3px solid transparent;
+  box-shadow:0 8px 28px rgba(249,115,22,.5),0 0 32px rgba(220,38,38,.3)}
+.tc-mini.special.fire .tc-mini-photo::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(249,115,22,.4),transparent 60%);pointer-events:none}
+.tc-mini.special.fire::after{content:'🔥 HR';position:absolute;top:6px;right:-30px;background:linear-gradient(135deg,#f97316,#dc2626);color:#fff;font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tc-mini.special.fire .tc-mini-stats{display:none}
+.tc-mini.special.fire .tc-mini-sub{color:#fb923c;font-weight:700}
+
+/* Stealing — speed/motion theme (cyan/blue) */
+.tc-mini.special.stealing{border-color:#06b6d4;
+  background:linear-gradient(160deg,#0e7490,#0a0a0a 50%) padding-box,
+  linear-gradient(135deg,#06b6d4,#0ea5e9,#22d3ee,#06b6d4) border-box;border:3px solid transparent;
+  box-shadow:0 8px 28px rgba(6,182,212,.5),0 0 32px rgba(14,165,233,.3)}
+.tc-mini.special.stealing .tc-mini-photo::before{content:'';position:absolute;inset:0;background:
+  repeating-linear-gradient(115deg,transparent 0,transparent 14px,rgba(34,211,238,.18) 14px,rgba(34,211,238,.18) 16px);
+  pointer-events:none;z-index:2;mix-blend-mode:screen}
+.tc-mini.special.stealing::after{content:'⚡ STEAL';position:absolute;top:6px;right:-30px;background:linear-gradient(135deg,#06b6d4,#0ea5e9);color:#0a0a0a;font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tc-mini.special.stealing .tc-mini-stats{display:none}
+.tc-mini.special.stealing .tc-mini-sub{color:#67e8f9;font-weight:700;letter-spacing:1.2px}
+
+/* Ukraine — Heart of Ukraine theme (blue+yellow flag) */
+.tc-mini.special.ukraine{border-color:#fde047;
+  background:linear-gradient(180deg,#1e3a8a 0%,#1e3a8a 50%,#0a0a0a 50%,#0a0a0a 100%) padding-box,
+  linear-gradient(180deg,#0057b8 0%,#0057b8 50%,#ffd700 50%,#ffd700 100%) border-box;border:3px solid transparent;
+  box-shadow:0 8px 28px rgba(0,87,184,.5),0 0 32px rgba(255,215,0,.3)}
+.tc-mini.special.ukraine .tc-mini-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,87,184,.18) 0%,rgba(0,87,184,.18) 50%,rgba(255,215,0,.12) 50%,rgba(255,215,0,.12) 100%);pointer-events:none}
+.tc-mini.special.ukraine::after{content:'💙💛 UA';position:absolute;top:6px;right:-32px;background:linear-gradient(180deg,#0057b8 0%,#0057b8 50%,#ffd700 50%,#ffd700 100%);color:#fff;font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4);text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.tc-mini.special.ukraine .tc-mini-stats{display:none}
+.tc-mini.special.ukraine .tc-mini-sub{color:#fde047;font-weight:700;letter-spacing:1.2px}
+
+/* Champs — Team / Event Card (golden trophy theme) */
+.tc-mini.special.champs{border-color:transparent;
+  background:linear-gradient(160deg,#7c2d12,#0a0a0a 50%) padding-box,
+  linear-gradient(135deg,#fbbf24 0%,#d97706 35%,#fcd34d 55%,#f59e0b 100%) border-box;
+  border:3px solid transparent;
+  box-shadow:0 8px 28px rgba(217,119,6,.55),0 0 36px rgba(252,211,77,.35)}
+.tc-mini.special.champs .tc-mini-photo img{object-position:center}
+.tc-mini.special.champs .tc-mini-photo::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(252,211,77,.28),transparent 65%);pointer-events:none}
+.tc-mini.special.champs::after{content:'🏆 EVENT';position:absolute;top:6px;right:-30px;
+  background:linear-gradient(135deg,#fbbf24,#d97706);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tc-mini.special.champs .tc-mini-stats{display:none}
+.tc-mini.special.champs .tc-mini-sub{color:#fcd34d;font-weight:700;letter-spacing:1.2px}
+.tc-mini.special.champs .tc-mini-icon{filter:drop-shadow(0 2px 6px rgba(252,211,77,.6))}
+
+/* Locked card (in collection, not yet pulled) */
+.tc-mini.locked .tc-mini-photo,.tc-mini.locked .tc-mini-grad,.tc-mini.locked .tc-mini-info,.tc-mini.locked .tc-mini-num{display:none}
+.tc-mini.locked .tc-mini-locked-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.tc-mini.locked .tc-mini-locked-content .lock-num{font-family:'Oswald',sans-serif;font-size:48px;font-weight:700;color:rgba(255,215,0,.18);line-height:1}
+.tc-mini.locked .tc-mini-locked-content .lock-name{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1.5px;color:#475569;text-align:center;padding:0 10px}
+.tc-mini.locked .tc-mini-locked-content .lock-q{font-size:32px;color:rgba(255,215,0,.25);font-weight:700}
+.tc-mini.locked.special-locked .tc-mini-locked-content .lock-num{display:none}
+
+/* Tag (variant label) */
+.tc-mini-tag{position:absolute;top:8px;right:8px;font-family:'Oswald',sans-serif;font-size:8px;font-weight:800;letter-spacing:1.5px;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.6);color:#94a3b8;z-index:5}
+
+/* Count badge (for duplicates) */
+.tc-mini-count{position:absolute;bottom:8px;right:8px;background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;font-family:'Oswald',sans-serif;font-size:11px;font-weight:800;padding:2px 8px;border-radius:10px;z-index:5;letter-spacing:.5px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+
+/* Reveal animation */
+.pack-reveal .tc-mini{animation:reveal-card .6s cubic-bezier(.34,1.56,.64,1) backwards}
+.pack-reveal .tc-mini:nth-child(1){animation-delay:.1s}
+.pack-reveal .tc-mini:nth-child(2){animation-delay:.4s}
+.pack-reveal .tc-mini:nth-child(3){animation-delay:.7s}
+@keyframes reveal-card{0%{transform:scale(.3) rotateY(180deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotateY(0);opacity:1}}
+
+/* Sammlung */
+.coll-tabs{display:flex;gap:6px;justify-content:center;padding:0 20px 14px;flex-wrap:wrap}
+.coll-tab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;
+  padding:8px 18px;border-radius:20px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:.15s}
+.coll-tab:hover{color:#cbd5e1;border-color:rgba(255,215,0,.2)}
+.coll-tab.active{background:linear-gradient(135deg,rgba(245,166,35,.2),rgba(255,215,0,.1));color:#ffd700;border-color:rgba(255,215,0,.5)}
+.coll-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,160px));gap:14px;justify-content:center;padding:0 16px 32px}
+.coll-grid .tc-mini{width:100%}
+
+@media(max-width:480px){
+  .pack-art{width:200px;height:280px}
+  .pack-text-mid{font-size:22px}
+  .pack-bat{font-size:90px}
+  .tc-mini{width:160px}
+  .coll-grid{grid-template-columns:repeat(auto-fill,minmax(120px,140px));gap:10px}
+}
+
+/* ── PACK STAGE (Reveal-Animation FIFA-Style) ── */
+.pack-stage{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(20px);overflow:hidden}
+.pack-stage.open{display:flex}
+.pack-stage-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,215,0,.12) 0%,rgba(0,0,0,.95) 70%);pointer-events:none}
+.pack-stage-rays{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
+.pack-stage.show-rays .pack-stage-rays{opacity:1;
+  background:conic-gradient(from 0deg at 50% 50%,transparent 0deg,rgba(255,215,0,.18) 10deg,transparent 25deg,transparent 70deg,rgba(255,255,255,.1) 80deg,transparent 95deg,transparent 140deg,rgba(255,215,0,.18) 150deg,transparent 165deg,transparent 215deg,rgba(255,255,255,.1) 225deg,transparent 240deg,transparent 285deg,rgba(255,215,0,.18) 295deg,transparent 310deg,transparent 360deg);
+  animation:rays-rotate 12s linear infinite}
+@keyframes rays-rotate{to{transform:rotate(360deg)}}
+
+.pack-stage-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:18px;
+  cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:.2s;backdrop-filter:blur(8px)}
+.pack-stage-close:hover{background:rgba(239,68,68,.4);border-color:rgba(239,68,68,.5)}
+.pack-stage-close.disabled{opacity:0;pointer-events:none}
+
+.pack-stage-content{position:relative;z-index:5;perspective:1500px;width:100%;display:flex;align-items:center;justify-content:center;min-height:480px}
+.pack-stage-hint{position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:6;
+  font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:4px;color:rgba(255,215,0,.7);
+  text-transform:uppercase;animation:hint-pulse 1.5s ease-in-out infinite;pointer-events:none}
+.pack-stage-hint.hidden{display:none}
+@keyframes hint-pulse{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+.pack-stage-footer{position:absolute;bottom:40px;left:0;right:0;display:flex;justify-content:center;gap:14px;z-index:6;opacity:0;transition:opacity .4s}
+.pack-stage-footer.show{opacity:1}
+.pack-stage-btn{padding:12px 28px;background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  border:none;border-radius:24px;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(255,215,0,.3)}
+.pack-stage-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,215,0,.5)}
+.pack-stage-btn.ghost{background:rgba(255,255,255,.06);color:#cbd5e1;box-shadow:none;border:1px solid rgba(255,255,255,.12)}
+.pack-stage-btn.ghost:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* Pack art on stage (large) */
+.stage-pack{width:340px;height:476px;position:relative;cursor:pointer;
+  background:linear-gradient(160deg,#0a0a0a,#1a1a1a 35%,#262626 65%,#0a0a0a);
+  border:3px solid #ffd700;border-radius:22px;overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.7),0 0 60px rgba(255,215,0,.3),inset 0 0 0 1px rgba(255,215,0,.3);
+  animation:stage-pack-idle 2.5s ease-in-out infinite}
+@keyframes stage-pack-idle{0%,100%{transform:perspective(1000px) rotateX(5deg) rotateY(0deg) translateY(0)}50%{transform:perspective(1000px) rotateX(5deg) rotateY(-6deg) translateY(-6px)}}
+.stage-pack:hover{animation:stage-pack-hover .8s ease-in-out infinite}
+@keyframes stage-pack-hover{0%,100%{transform:perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.04)}50%{transform:perspective(1000px) rotateX(0deg) rotateY(-3deg) scale(1.05)}}
+.stage-pack-shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,215,0,.4) 47%,rgba(255,255,255,.6) 50%,rgba(255,215,0,.4) 53%,transparent 70%);background-size:200% 200%;animation:foil-sweep 4s linear infinite;mix-blend-mode:overlay;pointer-events:none}
+.stage-pack-bat{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:140px;opacity:.16;filter:drop-shadow(0 4px 16px rgba(255,215,0,.5))}
+.stage-pack-text{position:absolute;left:0;right:0;text-align:center;font-family:'Oswald',sans-serif;color:#ffd700;pointer-events:none}
+.stage-pack-text.top{top:36px;font-size:16px;letter-spacing:6px;font-weight:600;color:rgba(255,215,0,.85)}
+.stage-pack-text.mid{top:64px;font-size:32px;letter-spacing:3px;font-weight:800;color:#ffd700;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.stage-pack-text.bot{bottom:36px;font-size:13px;letter-spacing:5px;color:rgba(255,255,255,.5);font-weight:600}
+
+/* Pack tearing animation */
+.stage-pack.tearing{animation:pack-tear .8s ease-in forwards}
+@keyframes pack-tear{
+  0%{transform:perspective(1000px) rotateX(5deg) scale(1)}
+  20%{transform:perspective(1000px) rotateX(0deg) translateX(-6px) scale(1.06)}
+  30%{transform:perspective(1000px) rotateX(0deg) translateX(8px) scale(1.06)}
+  40%{transform:perspective(1000px) rotateX(0deg) translateX(-10px) scale(1.08)}
+  50%{transform:perspective(1000px) rotateX(0deg) translateX(10px) scale(1.08);box-shadow:0 24px 64px rgba(0,0,0,.7),0 0 120px rgba(255,215,0,.8)}
+  70%{transform:perspective(1000px) rotateY(-15deg) scale(1.1);opacity:1}
+  100%{transform:perspective(1000px) rotateY(-90deg) scale(.7);opacity:0}
+}
+
+/* Pack flash overlay */
+.pack-flash{position:absolute;inset:0;background:radial-gradient(circle at center,#ffffff 0%,#ffd700 30%,transparent 70%);opacity:0;pointer-events:none;mix-blend-mode:screen;z-index:8}
+.pack-flash.flash{animation:pack-flash .5s ease-out}
+@keyframes pack-flash{0%{opacity:0}30%{opacity:.95}100%{opacity:0}}
+
+/* Card stack (face-down cards after pack opens) */
+.stage-stack{position:relative;width:340px;height:476px}
+.stage-stack-card{position:absolute;inset:0;cursor:pointer;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s}
+
+/* Single face: content rotates around Y, swap content while edge-on */
+.card-face{position:absolute;inset:0;border-radius:18px;overflow:hidden;
+  transition:transform .25s ease-in;transform-origin:center}
+.stage-stack-card.flipping .card-face{transform:rotateY(90deg);transition:transform .22s ease-in}
+.stage-stack-card.flipping-back .card-face{transform:rotateY(-90deg);transition:none}
+.stage-stack-card.flipped .card-face{transform:rotateY(0deg);transition:transform .25s ease-out}
+
+/* Card BACK design (initial face content) */
+.cb{position:absolute;inset:0;border-radius:18px;
+  background:linear-gradient(160deg,#0a0a0a,#1a1a1a 30%,#262626 70%,#0a0a0a);
+  border:3px solid #ffd700;
+  box-shadow:0 12px 40px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,215,0,.25);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;overflow:hidden}
+.cb-shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,215,0,.35) 47%,rgba(255,255,255,.55) 50%,rgba(255,215,0,.35) 53%,transparent 65%);background-size:200% 200%;animation:foil-sweep 4s linear infinite;mix-blend-mode:overlay;pointer-events:none}
+.cb-bat{font-size:90px;filter:drop-shadow(0 4px 12px rgba(255,215,0,.5));opacity:.85}
+.cb-text{font-family:'Oswald',sans-serif;color:#ffd700;text-align:center;position:relative;z-index:2}
+.cb-text .ln1{font-size:20px;letter-spacing:6px;font-weight:700}
+.cb-text .ln2{font-size:12px;letter-spacing:4px;color:rgba(255,255,255,.5);margin-top:6px}
+
+/* When card-face contains a tc-mini (after reveal), enlarge styling */
+.card-face .tc-mini{width:100%;height:100%}
+.card-face .tc-mini-photo{height:65%}
+.card-face .tc-mini-grad{height:65%}
+.card-face .tc-mini-num{font-size:54px}
+.card-face .tc-mini-name{font-size:18px}
+.card-face .tc-mini-stats{margin-top:8px}
+.card-face .tc-mini-stat-v{font-size:18px}
+.card-face .tc-mini-stat-l{font-size:9px}
+
+/* Stack positioning: cards stacked, top card prominent */
+.stage-stack-card[data-pos="0"]{transform:translateZ(0);z-index:5}
+.stage-stack-card[data-pos="1"]{transform:translate(6px,6px) rotateZ(2deg);z-index:4;opacity:.88}
+.stage-stack-card[data-pos="2"]{transform:translate(12px,12px) rotateZ(4deg);z-index:3;opacity:.76}
+.stage-stack-card[data-pos="3"]{transform:translate(18px,18px) rotateZ(6deg);z-index:2;opacity:.62}
+.stage-stack-card[data-pos="4"]{transform:translate(24px,24px) rotateZ(8deg);z-index:1;opacity:.5}
+
+/* Revealing — currently being flipped, scaled up dramatic */
+.stage-stack-card.revealing{z-index:20;animation:card-reveal 1.6s cubic-bezier(.4,0,.6,1)}
+@keyframes card-reveal{
+  0%{transform:scale(1);filter:brightness(1)}
+  20%{transform:scale(1.14);filter:brightness(1.15)}
+  60%{transform:scale(1.16);filter:brightness(1.15)}
+  100%{transform:scale(1.05);filter:brightness(1)}
+}
+
+/* Showcased — reveal done, sits in row at the bottom */
+.stage-stack-card.showcased{transition:transform .6s cubic-bezier(.4,0,.6,1),opacity .4s;
+  pointer-events:none;z-index:5;opacity:1}
+/* Showcase: 5 cards arranged in a fan (overlapping with rotation) */
+.stage-stack-card.showcased[data-idx="0"]{transform:translate(-55%,82%) scale(.5) rotateZ(-14deg)}
+.stage-stack-card.showcased[data-idx="1"]{transform:translate(-30%,75%) scale(.55) rotateZ(-7deg)}
+.stage-stack-card.showcased[data-idx="2"]{transform:translate(0,72%) scale(.6) rotateZ(0)}
+.stage-stack-card.showcased[data-idx="3"]{transform:translate(30%,75%) scale(.55) rotateZ(7deg)}
+.stage-stack-card.showcased[data-idx="4"]{transform:translate(55%,82%) scale(.5) rotateZ(14deg)}
+
+/* Reveal glow for foil/special when flipped */
+.stage-stack-card.flipped.is-foil{filter:drop-shadow(0 0 30px rgba(168,85,247,.5)) drop-shadow(0 0 60px rgba(236,72,153,.3))}
+.stage-stack-card.flipped.is-special{filter:drop-shadow(0 0 30px rgba(255,215,0,.5)) drop-shadow(0 0 60px rgba(249,115,22,.3))}
+
+@media(max-width:768px){
+  /* Tablet: 5-card fan, slightly tighter */
+  .stage-stack-card.showcased[data-idx="0"]{transform:translate(-45%,78%) scale(.42) rotateZ(-14deg)}
+  .stage-stack-card.showcased[data-idx="1"]{transform:translate(-23%,72%) scale(.46) rotateZ(-7deg)}
+  .stage-stack-card.showcased[data-idx="2"]{transform:translate(0,68%) scale(.5) rotateZ(0)}
+  .stage-stack-card.showcased[data-idx="3"]{transform:translate(23%,72%) scale(.46) rotateZ(7deg)}
+  .stage-stack-card.showcased[data-idx="4"]{transform:translate(45%,78%) scale(.42) rotateZ(14deg)}
+}
+@media(max-width:480px){
+  .stage-pack,.stage-stack{width:240px;height:336px}
+  .stage-pack-text.mid{font-size:26px}
+  .stage-pack-text.top{font-size:14px;letter-spacing:5px}
+  .stage-pack-text.bot{font-size:11px;letter-spacing:4px}
+  .stage-pack-bat{font-size:110px}
+  .cb-bat{font-size:74px}
+  .cb-text .ln1{font-size:16px;letter-spacing:4px}
+  .pack-stage-content{min-height:440px;padding:0 12px}
+  /* Phone: 5-card fan, very tight to fit narrow viewport */
+  .stage-stack-card.showcased[data-idx="0"]{transform:translate(-38%,62%) scale(.34) rotateZ(-14deg)}
+  .stage-stack-card.showcased[data-idx="1"]{transform:translate(-19%,58%) scale(.38) rotateZ(-7deg)}
+  .stage-stack-card.showcased[data-idx="2"]{transform:translate(0,55%) scale(.42) rotateZ(0)}
+  .stage-stack-card.showcased[data-idx="3"]{transform:translate(19%,58%) scale(.38) rotateZ(7deg)}
+  .stage-stack-card.showcased[data-idx="4"]{transform:translate(38%,62%) scale(.34) rotateZ(14deg)}
+  .pack-stage-footer{bottom:24px}
+  .pack-stage-hint{bottom:90px;font-size:10px;letter-spacing:3px}
+}
+
+/* ── CARD ZOOM OVERLAY (clickable collection cards) ── */
+.card-zoom-overlay{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);
+  display:none;align-items:center;justify-content:center;padding:30px}
+.card-zoom-overlay.open{display:flex;animation:zoom-in .25s ease-out}
+@keyframes zoom-in{from{opacity:0}to{opacity:1}}
+.card-zoom-inner{position:relative;width:min(360px,86vw);max-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.card-zoom-inner .tc-mini{width:100%;aspect-ratio:5/7}
+.zoom-info{font-size:12px;color:#94a3b8;letter-spacing:1px;text-align:center;padding:0 6px}
+.zoom-info b{color:#ffd700;font-weight:600}
+.zoom-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.zoom-actions button{padding:9px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.25);color:#ffd700;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-radius:20px;cursor:pointer;transition:.15s}
+.zoom-actions button:hover{background:rgba(255,215,0,.18);border-color:#ffd700}
+.zoom-close-hint{font-size:10px;color:#475569;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+
+body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;inset:auto 0 auto 0;height:100vh;min-height:100vh;align-items:flex-start;padding-top:30px}
+
 /* ── SECTION HEADERS ── */
 .section{max-width:1600px;margin:0 auto;padding:8px 20px 0}
 .section-title{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;
@@ -560,6 +900,14 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 .gm-empty{font-size:12px;color:#475569;padding:14px;text-align:center;
   background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);border-radius:10px}
 
+/* ── LIGA TOGGLE TABS ── */
+.liga-toggle{display:flex;gap:6px;justify-content:center;padding:0 20px 12px;flex-wrap:wrap;max-width:1600px;margin:0 auto}
+.liga-tab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;
+  padding:8px 18px;border-radius:20px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:.15s;white-space:nowrap}
+.liga-tab:hover{color:#cbd5e1;border-color:rgba(255,215,0,.2)}
+.liga-tab.active{background:linear-gradient(135deg,rgba(245,166,35,.2),rgba(255,215,0,.1));color:#ffd700;border-color:rgba(255,215,0,.5)}
+
 /* ── LEAGUE TABLE ── */
 .lg-wrap{display:grid;grid-template-columns:2fr 1fr;gap:14px;padding:0 20px 16px;max-width:1600px;margin:0 auto}
 .lg-table-wrap{background:linear-gradient(160deg,#1a1a1a,#141414);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;overflow-x:auto}
@@ -643,6 +991,7 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
   <a href="#sec-leaderboards">Leaderboards</a>
   <a href="#sec-league">Liga</a>
   <a href="#sec-games">Spiele</a>
+  <a href="#sec-pack" class="snav-pack">🎴 Pack</a>
 </div></nav>
 
 <div class="controls">
@@ -680,6 +1029,10 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 
 <section id="sec-league">
   <div class="section"><div class="section-title">Liga <span id="leagueMeta"></span></div></div>
+  <div class="liga-toggle">
+    <button class="liga-tab active" onclick="showLiga('bb')" data-liga="bb">⚾ Bezirksliga</button>
+    <button class="liga-tab" onclick="showLiga('sb')" data-liga="sb">🥎 BBQ-Liga (Softball)</button>
+  </div>
   <div class="lg-wrap">
     <div class="lg-table-wrap">
       <table class="lg-table" id="leagueTable"></table>
@@ -693,6 +1046,50 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
   <div class="section"><div class="section-title">Spiele <span id="gameCount"></span></div></div>
   <div class="gl-grid" id="gameLog"></div>
 </section>
+
+<section id="sec-pack">
+  <div class="section"><div class="section-title">Sammelpack <span id="packMeta"></span></div></div>
+  <div class="pack-wrap">
+    <div class="pack-hero">
+      <div class="pack-art" id="packArt" onclick="openPack()" style="cursor:pointer">
+        <div class="pack-bat">🦇</div>
+        <div class="pack-foil-shine"></div>
+        <div class="pack-text">
+          <div class="pack-text-top">DUISBURG</div>
+          <div class="pack-text-mid">FLYING BATS</div>
+          <div class="pack-text-bot">SAMMELPACK · 5 KARTEN</div>
+        </div>
+      </div>
+      <button class="pack-open-btn" id="packOpenBtn" onclick="openPack()">
+        <span id="packBtnText">PACK ÖFFNEN</span>
+      </button>
+      <div class="pack-cooldown" id="packCooldown"></div>
+    </div>
+
+    <div class="section" style="margin-top:24px"><div class="section-title">Meine Sammlung <span id="collMeta"></span></div></div>
+    <div class="coll-tabs">
+      <button class="coll-tab active" onclick="showCollTab('standard')" data-coll="standard">Standard</button>
+      <button class="coll-tab" onclick="showCollTab('foil')" data-coll="foil">Foil</button>
+      <button class="coll-tab" onclick="showCollTab('special')" data-coll="special">Special</button>
+    </div>
+    <div class="coll-grid" id="collGrid"></div>
+  </div>
+</section>
+
+<!-- PACK REVEAL OVERLAY (FIFA/Pokemon-style) -->
+<div class="pack-stage" id="packStage">
+  <button class="pack-stage-close" onclick="closePackStage()" id="packStageClose" aria-label="Schließen">&#x2715;</button>
+  <div class="pack-stage-bg"></div>
+  <div class="pack-stage-rays" id="packStageRays"></div>
+  <div class="pack-stage-content" id="packStageContent"></div>
+  <div class="pack-stage-hint" id="packStageHint">PACK TIPPEN ZUM ÖFFNEN</div>
+  <div class="pack-stage-footer" id="packStageFooter"></div>
+</div>
+
+<!-- ENLARGED CARD OVERLAY (clickable collection items) -->
+<div class="card-zoom-overlay" id="cardZoomOverlay" onclick="closeCardZoom(event)">
+  <div class="card-zoom-inner" id="cardZoomInner"></div>
+</div>
 
 <!-- GAME MODAL -->
 <div class="overlay" id="gameOverlay" onclick="gameOverlayClick(event)">
@@ -794,34 +1191,64 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 <script>
 var PL = [{"num":2,"name":"TIM ELFRINK","games":2,"status":"2","pa":8,"ab":5,"1b":2,"2b":2,"3b":0,"hr":0,"h":4,"tb":6,"bb":3,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":0,"sb":1,"cs":0,"runs":3,"rbi":2,"avg":0.8,"obp":0.875,"slg":1.2,"ops":2.075,"tb_pts":6,"mvp_pts":2,"youtube":[],"fielding":{"inn":11.5,"inn_outs":1,"assists":1,"e":0,"dp":0,"c_sb":6,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":9,"name":"HUANG TZU-CHENG (DAVID)","games":1,"status":"1","pa":5,"ab":4,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":1,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":2,"k":1,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0.2,"slg":0,"ops":0.2,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":6.5,"inn_outs":4,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":10,"name":"FELIX SCHOENFELDER","games":2,"status":"2","pa":8,"ab":7,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":4,"k":1,"sb":2,"cs":0,"runs":1,"rbi":2,"avg":0.143,"obp":0.25,"slg":0.143,"ops":0.393,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":11.5,"inn_outs":2,"assists":2,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":1,"w":0,"l":0,"sv":0,"so":1,"pk":2,"h":1,"r":6,"hr":0,"bb":6,"hbp":1,"wp":0}},{"num":11,"name":"ANDRE LEHNHOFF","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":14,"name":"ANDRE PLITT","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":15,"name":"DENIS DEKTYAROV","games":0,"status":"0/2","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":16,"name":"JORDAN GRUEN","games":0,"status":"IL","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":17,"name":"JAN UWE FELDMANN (JUF)","games":1,"status":"1","pa":2,"ab":2,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":1,"mvp_pts":0,"youtube":[{"id":"xKpJXe3S9Qc","start":7133,"label":"Hit vs. Gegner"}],"fielding":{"inn":2,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":18,"name":"STEFAN BOSBACH","games":2,"status":"2","pa":8,"ab":6,"1b":3,"2b":0,"3b":0,"hr":0,"h":3,"tb":3,"bb":2,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":2,"sb":3,"cs":0,"runs":3,"rbi":1,"avg":0.5,"obp":0.625,"slg":0.5,"ops":1.125,"tb_pts":3,"mvp_pts":9,"youtube":[],"fielding":{"inn":11.5,"inn_outs":3,"assists":2,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":5,"w":0,"l":1,"sv":0,"so":7,"pk":0,"h":4,"r":4,"hr":0,"bb":4,"hbp":1,"wp":5}},{"num":21,"name":"RENE LASPE","games":1,"status":"1","pa":4,"ab":4,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.25,"obp":0.25,"slg":0.25,"ops":0.5,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":5,"inn_outs":0,"assists":1,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":22,"name":"FABIAN HERMANS","games":1,"status":"1","pa":4,"ab":3,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":2,"sb":1,"cs":0,"runs":1,"rbi":0,"avg":0.333,"obp":0.5,"slg":0.333,"ops":0.833,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":5.5,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":32,"name":"NIKLAS WINGARZ","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":35,"name":"MARCEL PUSCH","games":1,"status":"1","pa":4,"ab":4,"1b":2,"2b":0,"3b":0,"hr":0,"h":2,"tb":2,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":2,"sb":1,"cs":0,"runs":1,"rbi":2,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":2,"mvp_pts":0,"youtube":[],"fielding":{"inn":5,"inn_outs":2,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":4,"w":1,"l":0,"sv":0,"so":5,"pk":0,"h":1,"r":0,"hr":0,"bb":1,"hbp":0,"wp":0}},{"num":43,"name":"SERHAN SAHAN","games":1,"status":"1","pa":4,"ab":4,"1b":2,"2b":0,"3b":0,"hr":0,"h":2,"tb":2,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":2,"k":0,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":2,"mvp_pts":4,"youtube":[],"fielding":{"inn":6.5,"inn_outs":1,"assists":1,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":44,"name":"HUANG CHIEN-CHUN (JETER)","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":46,"name":"JUSTUS BERTELMANN","games":2,"status":"2","pa":9,"ab":9,"1b":1,"2b":1,"3b":0,"hr":0,"h":2,"tb":3,"bb":0,"hbp":0,"fc":1,"e_bat":2,"sf":0,"sh":0,"outs":3,"k":1,"sb":0,"cs":0,"runs":4,"rbi":0,"avg":0.222,"obp":0.222,"slg":0.333,"ops":0.556,"tb_pts":3,"mvp_pts":0,"youtube":[],"fielding":{"inn":11.5,"inn_outs":1,"assists":4,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":64,"name":"BJOERN BULENDA","games":2,"status":"2","pa":6,"ab":5,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":1,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":2,"sb":1,"cs":0,"runs":2,"rbi":0,"avg":0.2,"obp":0.333,"slg":0.2,"ops":0.533,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":8.5,"inn_outs":4,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":72,"name":"ARSIM KRASNIC","games":1,"status":"1","pa":2,"ab":2,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":0,"k":1,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":3,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":76,"name":"DANYLO CHERKASHENKO","games":2,"status":"2","pa":3,"ab":3,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.333,"obp":0.333,"slg":0.333,"ops":0.667,"tb_pts":1,"mvp_pts":0,"youtube":[{"id":"xKpJXe3S9Qc","start":4057,"label":"Highlight"}],"fielding":{"inn":4,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":85,"name":"BERKAY GOEK","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":86,"name":"KEVIN SCHANZ","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":87,"name":"BEN CHAREST","games":2,"status":"2","pa":7,"ab":5,"1b":1,"2b":1,"3b":0,"hr":0,"h":2,"tb":3,"bb":2,"hbp":0,"fc":1,"e_bat":1,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":3,"rbi":0,"avg":0.4,"obp":0.571,"slg":0.6,"ops":1.171,"tb_pts":3,"mvp_pts":2,"youtube":[],"fielding":{"inn":11.5,"inn_outs":3,"assists":0,"e":1,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0.1,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":1,"hbp":0,"wp":0}}];
 
-// ── LEAGUE TABLE (BSV NRW Bezirksliga, Saison 2026) ──
+// ── LEAGUE TABLES (BSV NRW, Saison 2026) ──
 var OUR_TEAM = "Duisburg Flying Bats e.V.";
-var LEAGUE = {
-  name: "Bezirksliga Herren",
-  season: 2026,
-  source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6370&bsm_season=2026",
-  standings: [
-    {pos:1, team:"Krefeld Crows",            w:1, l:0, pct:1.000, streak:"W1"},
-    {pos:2, team:"Neunkirchen Nightmares 3", w:1, l:0, pct:1.000, streak:"W1"},
-    {pos:3, team:"Duisburg Flying Bats e.V.",w:1, l:1, pct:0.500, streak:"W1"},
-    {pos:4, team:"Düsseldorf Senators 2",    w:1, l:1, pct:0.500, streak:"L1"},
-    {pos:5, team:"Dortmund Wanderers 3",     w:0, l:0, pct:0.000, streak:"—"},
-    {pos:6, team:"Wassenberg Squirrels",     w:0, l:1, pct:0.000, streak:"L1"},
-    {pos:7, team:"Kapellen Turtles",         w:0, l:1, pct:0.000, streak:"L1"}
-  ],
-  schedule: [
-    {date:"2026-05-09", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Krefeld Crows", result:null},
-    {date:"2026-05-17", time:"15:00", home:"Kapellen Turtles", away:"Duisburg Flying Bats e.V.", result:null},
-    {date:"2026-06-06", time:"13:00", home:"Wassenberg Squirrels", away:"Duisburg Flying Bats e.V.", result:null},
-    {date:"2026-06-28", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Neunkirchen Nightmares 3", result:null},
-    {date:"2026-07-04", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Düsseldorf Senators 2", result:null},
-    {date:"2026-07-12", time:"15:00", home:"Krefeld Crows", away:"Duisburg Flying Bats e.V.", result:null},
-    {date:"2026-08-29", time:"18:00", home:"Dortmund Wanderers 3", away:"Duisburg Flying Bats e.V.", result:null},
-    {date:"2026-09-05", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Dortmund Wanderers 3", result:null},
-    {date:"2026-09-12", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Wassenberg Squirrels", result:null},
-    {date:"2026-09-20", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Kapellen Turtles", result:null}
-  ]
+var OUR_TEAM_SB = "Duisburg Flying Bats e.V. 2";
+
+var LEAGUES = {
+  bb: {
+    name: "Bezirksliga Herren", icon:"⚾", season: 2026, our_team: OUR_TEAM,
+    source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6370&bsm_season=2026",
+    standings: [
+      {pos:1, team:"Krefeld Crows",            w:1, l:0, pct:1.000, streak:"W1"},
+      {pos:2, team:"Neunkirchen Nightmares 3", w:1, l:0, pct:1.000, streak:"W1"},
+      {pos:3, team:"Duisburg Flying Bats e.V.",w:1, l:1, pct:0.500, streak:"W1"},
+      {pos:4, team:"Düsseldorf Senators 2",    w:1, l:1, pct:0.500, streak:"L1"},
+      {pos:5, team:"Dortmund Wanderers 3",     w:0, l:0, pct:0.000, streak:"—"},
+      {pos:6, team:"Wassenberg Squirrels",     w:0, l:1, pct:0.000, streak:"L1"},
+      {pos:7, team:"Kapellen Turtles",         w:0, l:1, pct:0.000, streak:"L1"}
+    ],
+    schedule: [
+      {date:"2026-05-09", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Krefeld Crows", result:null},
+      {date:"2026-05-17", time:"15:00", home:"Kapellen Turtles", away:"Duisburg Flying Bats e.V.", result:null},
+      {date:"2026-06-06", time:"13:00", home:"Wassenberg Squirrels", away:"Duisburg Flying Bats e.V.", result:null},
+      {date:"2026-06-28", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Neunkirchen Nightmares 3", result:null},
+      {date:"2026-07-04", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Düsseldorf Senators 2", result:null},
+      {date:"2026-07-12", time:"15:00", home:"Krefeld Crows", away:"Duisburg Flying Bats e.V.", result:null},
+      {date:"2026-08-29", time:"18:00", home:"Dortmund Wanderers 3", away:"Duisburg Flying Bats e.V.", result:null},
+      {date:"2026-09-05", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Dortmund Wanderers 3", result:null},
+      {date:"2026-09-12", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Wassenberg Squirrels", result:null},
+      {date:"2026-09-20", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Kapellen Turtles", result:null}
+    ]
+  },
+  sb: {
+    name: "BBQ-Liga Softball", icon:"🥎", season: 2026, our_team: OUR_TEAM_SB,
+    source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6258&bsm_season=2026",
+    standings: [
+      {pos:1, team:"Untouchables Paderborn",                w:2, l:0, pct:1.000, streak:"W2"},
+      {pos:2, team:"Hausdülmen Thunderducks",               w:1, l:1, pct:0.500, streak:"L1"},
+      {pos:3, team:"Cologne Cardinals",                     w:0, l:0, pct:0.000, streak:"—"},
+      {pos:4, team:"Bottrop Blackjacks",                    w:0, l:0, pct:0.000, streak:"—"},
+      {pos:5, team:"Duisburg Flying Bats e.V. 2",           w:0, l:0, pct:0.000, streak:"—"},
+      {pos:6, team:"SG Ennepetal Raccoons/Dortmund Rhinos", w:0, l:0, pct:0.000, streak:"—"},
+      {pos:7, team:"Herne Lizards",                         w:0, l:0, pct:0.000, streak:"—"},
+      {pos:8, team:"BSC Hickory",                           w:0, l:0, pct:0.000, streak:"—"},
+      {pos:9, team:"Wesseling Vermins 5",                   w:0, l:2, pct:0.000, streak:"L2"}
+    ],
+    schedule: [
+      {date:"2026-05-02", time:"—", home:"Bottrop Blackjacks", away:"Duisburg Flying Bats e.V. 2", result:null},
+      {date:"2026-05-02", time:"—", home:"Duisburg Flying Bats e.V. 2", away:"Cologne Cardinals", result:null},
+      {date:"2026-05-31", time:"—", home:"Cologne Cardinals", away:"Duisburg Flying Bats e.V. 2", result:null},
+      {date:"2026-05-31", time:"—", home:"Duisburg Flying Bats e.V. 2", away:"BSC Hickory", result:null},
+      {date:"2026-07-18", time:"—", home:"Herne Lizards", away:"Duisburg Flying Bats e.V. 2", result:null},
+      {date:"2026-07-18", time:"—", home:"Duisburg Flying Bats e.V. 2", away:"Untouchables Paderborn", result:null},
+      {date:"2026-09-26", time:"—", home:"Hausdülmen Thunderducks", away:"Duisburg Flying Bats e.V. 2", result:null},
+      {date:"2026-09-26", time:"—", home:"Duisburg Flying Bats e.V. 2", away:"Bottrop Blackjacks", result:null}
+    ]
+  }
 };
+var currentLiga='bb';
+var LEAGUE=LEAGUES.bb;
 
 // ── GAMES ──
 var GAMES = [
@@ -1070,7 +1497,7 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='ArrowRight') navPlayer(1);
 });
 
-// ── SHARE-AS-IMAGE (Canvas API based, works on file:// + native share) ──
+// ── SHARE-AS-IMAGE (Canvas API based) ──
 function _roundRect(ctx,x,y,w,h,r){
   if(typeof r==='number') r=[r,r,r,r];
   ctx.beginPath();
@@ -1085,16 +1512,9 @@ function _roundRect(ctx,x,y,w,h,r){
   ctx.quadraticCurveTo(x,y,x+r[0],y);
   ctx.closePath();
 }
-
 function _loadImg(src){
-  return new Promise(function(res){
-    var i=new Image();
-    i.onload=function(){res(i);};
-    i.onerror=function(){res(null);};
-    i.src=src;
-  });
+  return new Promise(function(res){var i=new Image();i.onload=function(){res(i);};i.onerror=function(){res(null);};i.src=src;});
 }
-
 function drawShareCard(canvas,p){
   return new Promise(function(resolve){
     var ctx=canvas.getContext('2d');
@@ -1103,143 +1523,77 @@ function drawShareCard(canvas,p){
     var photoH=Math.round(H*0.6);
     var borderCol={0:'#f5a623',1:'#ffd700',2:'#ec4899',3:'#ffd700'}[tier];
     var borderW={0:4,1:5,2:6,3:7}[tier];
-
-    // Background
-    ctx.fillStyle='#0a0a0a';
-    _roundRect(ctx,0,0,W,H,24);ctx.fill();
-
-    Promise.all([_loadImg(p.num+'.jpg'), _loadImg('logo.png')]).then(function(imgs){
-      var photo=imgs[0], logo=imgs[1];
-
-      // Photo or fallback initials
-      ctx.save();
-      _roundRect(ctx,0,0,W,photoH,[24,24,0,0]);ctx.clip();
+    ctx.fillStyle='#0a0a0a';_roundRect(ctx,0,0,W,H,24);ctx.fill();
+    Promise.all([_loadImg(p.num+'.jpg'),_loadImg('logo.png')]).then(function(imgs){
+      var photo=imgs[0],logo=imgs[1];
+      ctx.save();_roundRect(ctx,0,0,W,photoH,[24,24,0,0]);ctx.clip();
       if(photo){
-        // cover-fit, top-aligned
-        var iR=photo.width/photo.height, cR=W/photoH;
+        var iR=photo.width/photo.height,cR=W/photoH;
         if(iR>cR){var sh=photo.height,sw=sh*cR,sx=(photo.width-sw)/2,sy=0;}
         else{var sw=photo.width,sh=sw/cR,sx=0,sy=0;}
         ctx.drawImage(photo,sx,sy,sw,sh,0,0,W,photoH);
       } else {
-        var bg=ctx.createLinearGradient(0,0,W,photoH);
-        bg.addColorStop(0,'#1a1a1a');bg.addColorStop(1,'#262626');
+        var bg=ctx.createLinearGradient(0,0,W,photoH);bg.addColorStop(0,'#1a1a1a');bg.addColorStop(1,'#262626');
         ctx.fillStyle=bg;ctx.fillRect(0,0,W,photoH);
-        ctx.font='bold 170px Oswald,sans-serif';
-        ctx.fillStyle='rgba(245,166,35,0.18)';
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(ini(p.name),W/2,photoH/2);
+        ctx.font='bold 170px Oswald,sans-serif';ctx.fillStyle='rgba(245,166,35,0.18)';
+        ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ini(p.name),W/2,photoH/2);
       }
-      // Bottom gradient over photo for text legibility
       var fade=ctx.createLinearGradient(0,photoH*0.55,0,photoH);
-      fade.addColorStop(0,'rgba(10,10,10,0)');
-      fade.addColorStop(1,'rgba(10,10,10,0.95)');
-      ctx.fillStyle=fade;ctx.fillRect(0,0,W,photoH);
-      ctx.restore();
-
-      // Number watermark
-      ctx.font='bold 96px Oswald,sans-serif';
-      ctx.fillStyle='rgba(255,255,255,0.16)';
-      ctx.textAlign='left';ctx.textBaseline='top';
-      ctx.fillText('#'+p.num,30,24);
-
-      // Crown for legends
-      if(tier>=3){
-        ctx.font='44px sans-serif';
-        ctx.textAlign='left';ctx.textBaseline='top';
-        ctx.fillText('\u{1F451}',150,28);
-      }
-
-      // MVP banner (diagonal, top-right)
+      fade.addColorStop(0,'rgba(10,10,10,0)');fade.addColorStop(1,'rgba(10,10,10,0.95)');
+      ctx.fillStyle=fade;ctx.fillRect(0,0,W,photoH);ctx.restore();
+      ctx.font='bold 96px Oswald,sans-serif';ctx.fillStyle='rgba(255,255,255,0.16)';
+      ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('#'+p.num,30,24);
+      if(tier>=3){ctx.font='44px sans-serif';ctx.fillText('\u{1F451}',150,28);}
       if(c>0){
         var label=tier>=3?'LEGEND':(tier>=2?'ELITE':'MVP');
         var lbl=label+(c>1?' ×'+c:'');
-        ctx.save();
-        ctx.translate(W-72,72);
-        ctx.rotate(Math.PI/4);
+        ctx.save();ctx.translate(W-72,72);ctx.rotate(Math.PI/4);
         var bgg;
         if(tier>=3){bgg=ctx.createLinearGradient(-110,0,110,0);bgg.addColorStop(0,'#ffd700');bgg.addColorStop(.5,'#fff');bgg.addColorStop(1,'#ffd700');}
         else if(tier>=2){bgg=ctx.createLinearGradient(-110,0,110,0);bgg.addColorStop(0,'#a855f7');bgg.addColorStop(.5,'#ec4899');bgg.addColorStop(1,'#f59e0b');}
         else{bgg=ctx.createLinearGradient(-110,0,110,0);bgg.addColorStop(0,'#f5a623');bgg.addColorStop(1,'#ffd700');}
-        ctx.fillStyle=bgg;
-        ctx.fillRect(-120,-15,240,30);
-        ctx.font='bold 15px Oswald,sans-serif';
-        ctx.fillStyle=tier>=3?'#000':(tier>=2?'#fff':'#0a0a0a');
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(lbl,0,0);
-        ctx.restore();
+        ctx.fillStyle=bgg;ctx.fillRect(-120,-15,240,30);
+        ctx.font='bold 15px Oswald,sans-serif';ctx.fillStyle=tier>=3?'#000':(tier>=2?'#fff':'#0a0a0a');
+        ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lbl,0,0);ctx.restore();
       }
-
-      // Name
-      ctx.font='bold 38px Oswald,sans-serif';
-      ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=14;
-      ctx.fillStyle='#fff';
-      ctx.textAlign='left';ctx.textBaseline='top';
-      ctx.fillText(p.name,30,photoH+8);
-      ctx.shadowBlur=0;
-
-      // Stats row
+      ctx.font='bold 38px Oswald,sans-serif';ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=14;
+      ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='top';
+      ctx.fillText(p.name,30,photoH+8);ctx.shadowBlur=0;
       if(p.games>0){
-        var stats=[
-          {l:'AVG',v:a3(p.avg)},
-          {l:'HITS',v:p.h},
-          {l:'RBI',v:p.rbi},
-          {l:'OPS',v:p.ops>0?a3(p.ops):'-'}
-        ];
-        var pad=30, gap=12;
-        var statW=(W-pad*2-gap*3)/4;
-        var statH=88;
-        var statY=photoH+74;
+        var stats=[{l:'AVG',v:a3(p.avg)},{l:'HITS',v:p.h},{l:'RBI',v:p.rbi},{l:'OPS',v:p.ops>0?a3(p.ops):'-'}];
+        var pad=30,gap=12,statW=(W-pad*2-gap*3)/4,statH=88,statY=photoH+74;
         stats.forEach(function(s,i){
           var x=pad+i*(statW+gap);
-          ctx.fillStyle='rgba(0,0,0,0.55)';
-          _roundRect(ctx,x,statY,statW,statH,12);ctx.fill();
+          ctx.fillStyle='rgba(0,0,0,0.55)';_roundRect(ctx,x,statY,statW,statH,12);ctx.fill();
           ctx.strokeStyle='rgba(255,215,0,0.22)';ctx.lineWidth=1;ctx.stroke();
-          ctx.font='bold 28px Oswald,sans-serif';
-          ctx.fillStyle='#ffd700';
-          ctx.textAlign='center';ctx.textBaseline='top';
-          ctx.fillText(String(s.v),x+statW/2,statY+18);
-          ctx.font='600 11px Inter,sans-serif';
-          ctx.fillStyle='#94a3b8';
+          ctx.font='bold 28px Oswald,sans-serif';ctx.fillStyle='#ffd700';
+          ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(String(s.v),x+statW/2,statY+18);
+          ctx.font='600 11px Inter,sans-serif';ctx.fillStyle='#94a3b8';
           ctx.fillText(s.l,x+statW/2,statY+58);
         });
       } else {
-        ctx.font='600 14px Inter,sans-serif';
-        ctx.fillStyle='#94a3b8';
-        ctx.textAlign='center';ctx.textBaseline='top';
-        ctx.fillText('NOCH KEIN EINSATZ IN DIESER SAISON',W/2,photoH+90);
+        ctx.font='600 14px Inter,sans-serif';ctx.fillStyle='#94a3b8';
+        ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('NOCH KEIN EINSATZ IN DIESER SAISON',W/2,photoH+90);
       }
-
-      // Footer
       var footY=H-86;
-      var fbg=ctx.createLinearGradient(0,footY,0,H);
-      fbg.addColorStop(0,'rgba(0,0,0,0)');fbg.addColorStop(1,'rgba(0,0,0,0.85)');
+      var fbg=ctx.createLinearGradient(0,footY,0,H);fbg.addColorStop(0,'rgba(0,0,0,0)');fbg.addColorStop(1,'rgba(0,0,0,0.85)');
       ctx.fillStyle=fbg;ctx.fillRect(0,footY,W,86);
       ctx.fillStyle='rgba(255,215,0,0.22)';ctx.fillRect(0,footY,W,1);
       if(logo) ctx.drawImage(logo,30,footY+18,50,50);
-      ctx.font='bold 18px Oswald,sans-serif';
-      ctx.fillStyle='#ffd700';
-      ctx.textAlign='left';ctx.textBaseline='top';
-      ctx.fillText('DUISBURG FLYING BATS',95,footY+22);
-      ctx.font='600 11px Inter,sans-serif';
-      ctx.fillStyle='#94a3b8';
+      ctx.font='bold 18px Oswald,sans-serif';ctx.fillStyle='#ffd700';
+      ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('DUISBURG FLYING BATS',95,footY+22);
+      ctx.font='600 11px Inter,sans-serif';ctx.fillStyle='#94a3b8';
       ctx.fillText('SAISON 2026 · flyingbats.de',95,footY+50);
-
-      // Border (rounded outline, tier-coloured)
-      ctx.strokeStyle=borderCol;
-      ctx.lineWidth=borderW;
-      _roundRect(ctx,borderW/2,borderW/2,W-borderW,H-borderW,22);
-      ctx.stroke();
-
+      ctx.strokeStyle=borderCol;ctx.lineWidth=borderW;
+      _roundRect(ctx,borderW/2,borderW/2,W-borderW,H-borderW,22);ctx.stroke();
       resolve();
     });
   });
 }
-
 function shareCardAsImage(){
   if(!currentPlayer) return;
   var p=currentPlayer;
-  var canvas=document.createElement('canvas');
-  canvas.width=600;canvas.height=840;
+  var canvas=document.createElement('canvas');canvas.width=600;canvas.height=840;
   var fontPromise=(document.fonts&&document.fonts.ready)||Promise.resolve();
   fontPromise.then(function(){return drawShareCard(canvas,p);}).then(function(){
     canvas.toBlob(function(blob){
@@ -1251,32 +1605,16 @@ function shareCardAsImage(){
       var safe=p.name.replace(/[^a-z0-9]+/gi,'_').replace(/_+$/,'');
       var fname='flyingbats_'+p.num+'_'+safe+'.png';
       var file=new File([blob],fname,{type:'image/png'});
-      // Native share (mobile: Instagram, WhatsApp etc.)
       if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-        navigator.share({
-          files:[file],
-          title:p.name+' · Flying Bats',
-          text:'#'+p.num+' '+p.name+' · Duisburg Flying Bats #flyingbats'
-        }).catch(function(err){
-          if(err && err.name!=='AbortError') console.warn('Share canceled/failed',err);
-        });
+        navigator.share({files:[file],title:p.name+' · Flying Bats',text:'#'+p.num+' '+p.name+' · Duisburg Flying Bats #flyingbats'}).catch(function(err){if(err && err.name!=='AbortError') console.warn('Share canceled',err);});
       } else {
-        // Desktop fallback: open in new tab so user can save / right-click → save image as
         var url=URL.createObjectURL(blob);
         var w=window.open(url,'_blank');
-        if(!w){
-          // Popup blocked → fallback to download
-          var a=document.createElement('a');
-          a.href=url;a.download=fname;
-          document.body.appendChild(a);a.click();document.body.removeChild(a);
-        }
+        if(!w){var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();document.body.removeChild(a);}
         setTimeout(function(){URL.revokeObjectURL(url);},10000);
       }
     },'image/png',0.95);
-  }).catch(function(err){
-    console.error('Share error',err);
-    alert('Karte konnte nicht erstellt werden: '+(err&&err.message||'Unbekannter Fehler'));
-  });
+  }).catch(function(err){console.error('Share error',err);alert('Karte konnte nicht erstellt werden: '+(err&&err.message||'?'));});
 }
 
 // ── COMPARE MODE ──
@@ -1825,18 +2163,25 @@ function closeGameModal(){
 function gameOverlayClick(e){if(e.target===document.getElementById('gameOverlay')) closeGameModal();}
 
 // ── LEAGUE TABLE ──
+function showLiga(name){
+  if(!LEAGUES[name]) return;
+  currentLiga=name;
+  document.querySelectorAll('.liga-tab').forEach(function(t){t.classList.toggle('active',t.dataset.liga===name);});
+  renderLeague();
+}
 function renderLeague(){
-  document.getElementById('leagueMeta').textContent=LEAGUE.name+' '+LEAGUE.season;
-  document.getElementById('lgSource').href=LEAGUE.source_url;
-  // Standings
+  var L=LEAGUES[currentLiga]||LEAGUES.bb;
+  var us=L.our_team;
+  document.getElementById('leagueMeta').textContent=L.icon+' '+L.name+' '+L.season;
+  document.getElementById('lgSource').href=L.source_url;
   var fmt=function(v){return v>0?'.'+String(Math.round(v*1000)).padStart(3,'0'):'.000';};
   var rows='<thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>Streak</th></tr></thead><tbody>';
-  LEAGUE.standings.forEach(function(t){
-    var us=t.team===OUR_TEAM;
+  L.standings.forEach(function(t){
+    var isUs=t.team===us;
     var streakCls=t.streak.indexOf('W')===0?'st-w':(t.streak.indexOf('L')===0?'st-l':'');
-    rows+='<tr'+(us?' class="us"':'')+'>'+
+    rows+='<tr'+(isUs?' class="us"':'')+'>'+
       '<td class="lg-pos">'+t.pos+'</td>'+
-      '<td class="lg-team">'+t.team.replace(' e.V.','')+(us?' <span class="lg-us-tag">WIR</span>':'')+'</td>'+
+      '<td class="lg-team">'+t.team.replace(' e.V.','').replace(/ 2$/,' <span style="color:#94a3b8">II</span>')+(isUs?' <span class="lg-us-tag">WIR</span>':'')+'</td>'+
       '<td>'+t.w+'</td><td>'+t.l+'</td>'+
       '<td class="lg-pct">'+fmt(t.pct)+'</td>'+
       '<td class="'+streakCls+'">'+t.streak+'</td>'+
@@ -1844,10 +2189,9 @@ function renderLeague(){
   });
   rows+='</tbody>';
   document.getElementById('leagueTable').innerHTML=rows;
-  // Upcoming Bats games (next 3)
   var today=new Date().toISOString().slice(0,10);
-  var upcoming=LEAGUE.schedule.filter(function(g){
-    return g.date>=today && (g.home===OUR_TEAM||g.away===OUR_TEAM);
+  var upcoming=L.schedule.filter(function(g){
+    return g.date>=today && (g.home===us||g.away===us);
   }).slice(0,3);
   if(upcoming.length){
     var html='<div class="lg-upcoming-title">Nächste Spiele</div>';
@@ -1855,7 +2199,7 @@ function renderLeague(){
       var d=new Date(g.date);
       var dStr=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.';
       var weekday=['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()];
-      var isHome=g.home===OUR_TEAM;
+      var isHome=g.home===us;
       var opp=(isHome?g.away:g.home).replace(' e.V.','');
       html+='<div class="lg-up-card">'+
         '<div class="lg-up-date"><div class="lg-up-day">'+weekday+'</div><div class="lg-up-num">'+dStr+'</div><div class="lg-up-time">'+g.time+'</div></div>'+
@@ -1873,6 +2217,456 @@ renderLeaderboards();
 renderLeague();
 renderGameLog();
 render();
+
+// ── PACK / COLLECTION SYSTEM ──
+var PACK_COOLDOWN_MS = 24*60*60*1000; // 24h
+var PACK_SIZE = 5;
+var STORAGE_KEY = 'flying-bats-cards-v1';
+
+// Baseball players without (good) photos — get a placeholder; excluded from foil pool
+var NO_PHOTO_NUMS = [14, 16, 32, 44, 72, 85, 87];
+
+// Softball roster (separate pool — no stats, but in pack/collection)
+var SOFTBALL_PL = [
+  {num:1,  name:'VEYRA PETZINNA',  photo:'sb_1.jpg'},
+  {num:2,  name:'MAJA JAKOV',      photo:'sb_2.jpg'},
+  {num:8,  name:'PHILIPP BAHR',    photo:'sb_8.jpg'},
+  {num:25, name:'JULIANE FÖTISCH', photo:'sb_25.jpg'},
+  {num:42, name:'TAMARA ECKERT',   photo:'sb_42.jpg'},
+  {num:81, name:'JONAH GOLITZ',    photo:'sb_81.jpg'},
+  {num:99, name:'ELKE BORGMANN',   photo:'sb_99.jpg'}
+];
+
+// Special edition cards
+var CARD_SPECIALS = [
+  {id:'coach_denis', baseNum:15, name:'COACH DEKTYAROV', subtitle:'BASEBALL HEAD COACH', cls:'special coach'},
+  {id:'fireball_tim', baseNum:2, name:'FIREBALL ELFRINK', subtitle:'HOMERUN PACK', cls:'special fire'},
+  {id:'stealing_serhan', baseNum:43, name:'SERHAN SAHAN', subtitle:'STEAL KING · IN MOTION', cls:'special stealing', photo:'stealing_serhan.jpg'},
+  {id:'ukraine_danylo', baseNum:76, name:'DANYLO CHERKASHENKO', subtitle:'HEART OF UKRAINE 💙💛', cls:'special ukraine', photo:'ukraine_danylo.jpg'},
+  {id:'bbq_champs_2025', baseNum:null, name:'BBQ-CHAMPS 2025', subtitle:'TEAM CHAMPIONSHIP 🏆', cls:'special champs', photo:'bbq_champs_2025.jpg'}
+];
+
+// Drop weights
+var ROLL_WEIGHTS = { normal:0.78, foil:0.17, special:0.05 };
+
+function loadCollection(){
+  try { var raw=localStorage.getItem(STORAGE_KEY); if(raw) return JSON.parse(raw); } catch(e){}
+  return { cards:{}, lastPackTime:0, totalPacks:0 };
+}
+function saveCollection(c){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); } catch(e){}
+}
+var COLL = loadCollection();
+
+function rollCard(){
+  var r=Math.random(), w=ROLL_WEIGHTS;
+  if(r<w.special) return rollSpecialCard();
+  if(r<w.special+w.foil) return rollPlayerCard('foil');
+  return rollPlayerCard('normal');
+}
+// Find player by card data (checks both BB and SB pools)
+function findCardPlayer(card){
+  if(card.team==='softball'){
+    for(var i=0;i<SOFTBALL_PL.length;i++) if(SOFTBALL_PL[i].num===card.num) return SOFTBALL_PL[i];
+    return null;
+  }
+  for(var j=0;j<PL.length;j++) if(PL[j].num===card.num) return PL[j];
+  return null;
+}
+
+function rollPlayerCard(variant){
+  // Foil-Pool excludes baseballers without photos (placeholders look weird with foil shimmer)
+  var bbPool = (variant==='foil') ? PL.filter(function(p){return NO_PHOTO_NUMS.indexOf(p.num)<0;}) : PL;
+  var bb=bbPool.length, sb=SOFTBALL_PL.length;
+  var idx=Math.floor(Math.random()*(bb+sb));
+  if(idx<bb) return {kind:'player', variant:variant, num:bbPool[idx].num, team:'baseball'};
+  var p=SOFTBALL_PL[idx-bb];
+  return {kind:'player', variant:variant, num:p.num, team:'softball'};
+}
+function rollSpecialCard(){
+  var s=CARD_SPECIALS[Math.floor(Math.random()*CARD_SPECIALS.length)];
+  return { kind:'special', specialId:s.id };
+}
+
+function cardId(card){
+  if(card.kind==='player'){
+    var prefix=card.team==='softball'?'s':'p';
+    return prefix+card.num+'_'+card.variant;
+  }
+  return 'sp_'+card.specialId;
+}
+
+function buildCardEl(card,opts){
+  opts=opts||{};
+  var locked=!!opts.locked;
+  var count=opts.count||0;
+  if(card.kind==='player'){
+    var p=findCardPlayer(card);
+    if(!p) return '';
+    var photoSrc=p.photo||(p.num+'.jpg');
+    var teamCls=card.team==='softball'?' is-sb':'';
+    var foilCls=card.variant==='foil'?' foil':'';
+    if(locked){
+      return '<div class="tc-mini locked'+teamCls+(card.variant==='foil'?' foil-locked':'')+'">'+
+        '<div class="tc-mini-locked-content">'+
+          '<div class="lock-num">#'+p.num+'</div>'+
+          '<div class="lock-name">'+p.name.split('(')[0].trim()+'</div>'+
+          (card.team==='softball'?'<div class="tc-mini-tag" style="position:static;margin-top:4px;background:rgba(255,215,0,.18);color:#ffd700">SOFTBALL</div>':'')+
+          (card.variant==='foil'?'<div class="tc-mini-tag" style="position:static;margin-top:4px">FOIL</div>':'')+
+        '</div></div>';
+    }
+    var stats=(p.games>0)
+      ? '<div class="tc-mini-stats">'+
+          '<div class="tc-mini-stat"><div class="tc-mini-stat-v">'+a3(p.avg)+'</div><div class="tc-mini-stat-l">AVG</div></div>'+
+          '<div class="tc-mini-stat"><div class="tc-mini-stat-v">'+p.h+'</div><div class="tc-mini-stat-l">H</div></div>'+
+        '</div>':'';
+    var noPhoto = card.team!=='softball' && NO_PHOTO_NUMS.indexOf(p.num)>=0;
+    var photoBlock = noPhoto
+      ? '<div class="tc-mini-photo no-photo"><div class="ph-bg"></div><div class="ph-num">#'+p.num+'</div></div>'
+      : '<div class="tc-mini-photo"><img src="'+photoSrc+'" alt="" onerror="this.style.display=\'none\'"></div>';
+    return '<div class="tc-mini'+foilCls+teamCls+(noPhoto?' no-photo-card':'')+'">'+
+      photoBlock+
+      '<div class="tc-mini-grad"></div>'+
+      '<div class="tc-mini-num">#'+p.num+'</div>'+
+      (card.team==='softball'?'<div class="tc-mini-tag" style="background:rgba(255,215,0,.25);color:#ffd700;font-weight:700">SB</div>':(card.variant==='foil'?'<div class="tc-mini-tag">FOIL</div>':''))+
+      (card.team==='softball'&&card.variant==='foil'?'<div class="tc-mini-tag" style="left:8px;right:auto">FOIL</div>':'')+
+      '<div class="tc-mini-info">'+
+        '<div class="tc-mini-name">'+p.name+'</div>'+
+        stats+
+      '</div>'+
+      (count>1?'<div class="tc-mini-count">×'+count+'</div>':'')+
+    '</div>';
+  } else {
+    // special
+    var s=null;
+    for(var j=0;j<CARD_SPECIALS.length;j++){if(CARD_SPECIALS[j].id===card.specialId){s=CARD_SPECIALS[j];break;}}
+    if(!s) return '';
+    if(locked){
+      return '<div class="tc-mini locked special-locked">'+
+        '<div class="tc-mini-locked-content">'+
+          '<div class="lock-q">?</div>'+
+          '<div class="lock-name">SPECIAL EDITION</div>'+
+        '</div></div>';
+    }
+    var photoSrc=s.photo||(s.baseNum+'.jpg');
+    var watermark = s.baseNum ? ('<div class="tc-mini-num">#'+s.baseNum+'</div>') : '<div class="tc-mini-num tc-mini-icon">🏆</div>';
+    return '<div class="tc-mini '+s.cls+'">'+
+      '<div class="tc-mini-photo"><img src="'+photoSrc+'" alt="" onerror="this.style.display=\'none\'"></div>'+
+      '<div class="tc-mini-grad"></div>'+
+      watermark+
+      '<div class="tc-mini-info">'+
+        '<div class="tc-mini-name">'+s.name+'</div>'+
+        '<div class="tc-mini-sub">'+s.subtitle+'</div>'+
+      '</div>'+
+      (count>1?'<div class="tc-mini-count">×'+count+'</div>':'')+
+    '</div>';
+  }
+}
+
+function canOpenPack(){ return Date.now()-COLL.lastPackTime>=PACK_COOLDOWN_MS; }
+
+function openPack(){
+  if(!canOpenPack()) return;
+  var pulled=[];
+  // First (PACK_SIZE-1) cards: regular weighted roll
+  for(var i=0;i<PACK_SIZE-1;i++) pulled.push(rollCard());
+  // Last card: guaranteed Foil or Special (75% Foil / 25% Special)
+  pulled.push(Math.random()<0.75 ? rollPlayerCard('foil') : rollSpecialCard());
+  // Save to collection
+  pulled.forEach(function(c){
+    var id=cardId(c);
+    COLL.cards[id]=(COLL.cards[id]||0)+1;
+  });
+  COLL.lastPackTime=Date.now();
+  COLL.totalPacks=(COLL.totalPacks||0)+1;
+  saveCollection(COLL);
+  updateCooldownUI();
+  renderCollection();
+  // Trigger reveal animation
+  startPackReveal(pulled);
+}
+
+// ── PACK REVEAL FLOW (FIFA/Pokemon TCG Pocket style) ──
+var revealCards=[], revealIndex=0;
+
+function startPackReveal(cards){
+  revealCards=cards.slice();
+  revealIndex=0;
+  var stage=document.getElementById('packStage');
+  var content=document.getElementById('packStageContent');
+  var rays=document.getElementById('packStageRays');
+  var hint=document.getElementById('packStageHint');
+  var footer=document.getElementById('packStageFooter');
+  var closeBtn=document.getElementById('packStageClose');
+
+  // Initial state: pack visible, rays subtle
+  stage.classList.add('open','show-rays');
+  closeBtn.classList.add('disabled'); // can't close until at least one card revealed
+  footer.classList.remove('show');
+  hint.textContent='PACK TIPPEN ZUM ÖFFNEN';
+  hint.classList.remove('hidden');
+
+  // Render the stage pack
+  content.innerHTML=
+    '<div class="stage-pack" id="stagePackArt" onclick="tearPack()">'+
+      '<div class="stage-pack-bat">🦇</div>'+
+      '<div class="stage-pack-shine"></div>'+
+      '<div class="stage-pack-text top">DUISBURG</div>'+
+      '<div class="stage-pack-text mid">FLYING BATS</div>'+
+      '<div class="stage-pack-text bot">'+PACK_SIZE+' KARTEN</div>'+
+    '</div>'+
+    '<div class="pack-flash" id="packFlash"></div>';
+  document.body.style.overflow='hidden';
+}
+
+function tearPack(){
+  var pack=document.getElementById('stagePackArt');
+  var flash=document.getElementById('packFlash');
+  var hint=document.getElementById('packStageHint');
+  if(!pack || pack.classList.contains('tearing')) return;
+  pack.classList.add('tearing');
+  hint.classList.add('hidden');
+  // Trigger flash mid-animation
+  setTimeout(function(){flash.classList.add('flash');},400);
+  // After tear animation, replace pack with card stack
+  setTimeout(function(){
+    showCardStack();
+  },820);
+}
+
+function showCardStack(){
+  var content=document.getElementById('packStageContent');
+  var hint=document.getElementById('packStageHint');
+  var closeBtn=document.getElementById('packStageClose');
+  var html='<div class="stage-stack" id="stageStack">';
+  revealCards.forEach(function(c,i){
+    var isFoil=(c.kind==='player' && c.variant==='foil');
+    var isSpecial=(c.kind==='special');
+    var cls='stage-stack-card'+(isFoil?' is-foil':'')+(isSpecial?' is-special':'');
+    html+='<div class="'+cls+'" data-pos="'+i+'" data-idx="'+i+'" onclick="flipRevealCard(this,'+i+')">'+
+      '<div class="card-face">'+
+        '<div class="cb">'+
+          '<div class="cb-shine"></div>'+
+          '<div class="cb-bat">🦇</div>'+
+          '<div class="cb-text"><div class="ln1">FLYING BATS</div><div class="ln2">SAISON 2026</div></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  });
+  html+='</div>';
+  content.innerHTML=html;
+  hint.textContent='KARTE TIPPEN ZUM AUFDECKEN';
+  hint.classList.remove('hidden');
+  closeBtn.classList.remove('disabled');
+}
+
+function flipRevealCard(el,idx){
+  if(el.classList.contains('flipped')||el.classList.contains('flipping')||el.classList.contains('revealing')) return;
+  var hint=document.getElementById('packStageHint');
+  hint.classList.add('hidden');
+  // Phase 1: rotate to 90deg (edge-on)
+  el.classList.add('flipping','revealing');
+  setTimeout(function(){
+    // Mid-rotation (edge-on): swap content from back to front
+    var face=el.querySelector('.card-face');
+    if(face){
+      var card=revealCards[idx];
+      face.innerHTML=buildCardEl(card);
+    }
+    // Snap to -90 (no transition), then animate to 0 (front face appears)
+    el.classList.remove('flipping');
+    el.classList.add('flipping-back');
+    requestAnimationFrame(function(){
+      el.classList.remove('flipping-back');
+      el.classList.add('flipped');
+    });
+  },220);
+  // After zoom-flip animation: promote to showcase + advance stack
+  setTimeout(function(){
+    el.classList.remove('revealing');
+    el.classList.add('showcased');
+    // Promote remaining stack cards
+    var stack=document.getElementById('stageStack');
+    var others=stack.querySelectorAll('.stage-stack-card:not(.showcased)');
+    others.forEach(function(c){
+      var pos=parseInt(c.getAttribute('data-pos'),10);
+      if(pos>0){ c.setAttribute('data-pos',pos-1); }
+    });
+    revealIndex++;
+    if(revealIndex>=revealCards.length){
+      // All revealed — show footer
+      var footer=document.getElementById('packStageFooter');
+      footer.innerHTML=
+        '<button class="pack-stage-btn" onclick="closePackStage();showCollTab(\'standard\');document.getElementById(\'sec-pack\').scrollIntoView({behavior:\'smooth\'})">SAMMLUNG ANSEHEN</button>'+
+        '<button class="pack-stage-btn ghost" onclick="closePackStage()">SCHLIESSEN</button>';
+      footer.classList.add('show');
+    } else {
+      hint.textContent='NÄCHSTE KARTE TIPPEN';
+      hint.classList.remove('hidden');
+    }
+  },1600);
+}
+
+function closePackStage(){
+  var stage=document.getElementById('packStage');
+  stage.classList.remove('open','show-rays');
+  document.body.style.overflow='';
+  // Reset content
+  setTimeout(function(){
+    document.getElementById('packStageContent').innerHTML='';
+    document.getElementById('packStageFooter').innerHTML='';
+    document.getElementById('packStageFooter').classList.remove('show');
+  },300);
+}
+
+// ESC closes pack stage
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(document.getElementById('cardZoomOverlay').classList.contains('open')) closeCardZoom();
+    else if(document.getElementById('packStage').classList.contains('open')){
+      var btn=document.getElementById('packStageClose');
+      if(!btn.classList.contains('disabled')) closePackStage();
+    }
+  }
+});
+
+// ── CLICKABLE COLLECTION (zoom overlay) ──
+function openCardZoom(card,opts){
+  opts=opts||{};
+  var inner=document.getElementById('cardZoomInner');
+  var c=card;
+  var info='';
+  var actions='';
+  if(c.kind==='player'){
+    var p=findCardPlayer(c);
+    if(p){
+      var teamLabel=c.team==='softball'?' · SOFTBALL':'';
+      info='<div class="zoom-info"><b>#'+p.num+' '+p.name+'</b>'+teamLabel+(c.variant==='foil'?' · FOIL':' · STANDARD')+(opts.count>1?' · ×'+opts.count+' im Besitz':'')+'</div>';
+      // Baseball: Profil + Teilen via stats modal. Softball: keine Profile.
+      if(c.team!=='softball'){
+        actions='<div class="zoom-actions">'+
+          '<button onclick="closeCardZoom();openModal('+p.num+',null)">PROFIL ÖFFNEN</button>'+
+          '<button onclick="closeCardZoom();openModal('+p.num+',null);setTimeout(shareCardAsImage,300)">TEILEN</button>'+
+        '</div>';
+      }
+    }
+  } else if(c.kind==='special'){
+    var s=null;
+    for(var j=0;j<CARD_SPECIALS.length;j++){if(CARD_SPECIALS[j].id===c.specialId){s=CARD_SPECIALS[j];break;}}
+    if(s){
+      info='<div class="zoom-info"><b>'+s.name+'</b><br>'+s.subtitle+(opts.count>1?' · ×'+opts.count+' im Besitz':'')+'</div>';
+    }
+  }
+  inner.innerHTML=buildCardEl(c,{count:opts.count})+info+actions+'<div class="zoom-close-hint">irgendwo klicken zum Schließen</div>';
+  document.getElementById('cardZoomOverlay').classList.add('open');
+  if(document.body.classList.contains('in-iframe')){
+    document.getElementById('cardZoomOverlay').style.top=(window.pageYOffset||0)+'px';
+  }
+}
+function closeCardZoom(e){
+  if(e && e.target && e.target.closest('.tc-mini, button, a')) return;
+  document.getElementById('cardZoomOverlay').classList.remove('open');
+}
+
+
+function fmtCooldown(ms){
+  var s=Math.ceil(ms/1000), h=Math.floor(s/3600);
+  s-=h*3600; var m=Math.floor(s/60); s-=m*60;
+  return (h<10?'0'+h:h)+':'+(m<10?'0'+m:m)+':'+(s<10?'0'+s:s);
+}
+function updateCooldownUI(){
+  var btn=document.getElementById('packOpenBtn');
+  var txt=document.getElementById('packBtnText');
+  var cd=document.getElementById('packCooldown');
+  var meta=document.getElementById('packMeta');
+  meta.textContent=(COLL.totalPacks||0)+' Packs geöffnet';
+  if(canOpenPack()){
+    btn.disabled=false;
+    txt.textContent='PACK ÖFFNEN';
+    cd.textContent='Bereit!';
+  } else {
+    btn.disabled=true;
+    txt.textContent='GESPERRT';
+    var rem=PACK_COOLDOWN_MS-(Date.now()-COLL.lastPackTime);
+    cd.textContent='Nächstes Pack in '+fmtCooldown(rem);
+  }
+}
+setInterval(updateCooldownUI,1000);
+
+var currentCollTab='standard';
+function showCollTab(name){
+  currentCollTab=name;
+  document.querySelectorAll('.coll-tab').forEach(function(t){t.classList.toggle('active',t.dataset.coll===name);});
+  renderCollection();
+}
+
+function renderCollection(){
+  var grid=document.getElementById('collGrid');
+  var meta=document.getElementById('collMeta');
+  var html='', total=0, owned=0;
+  function wrap(card,locked,cnt){
+    if(locked){
+      // locked: not clickable, render as-is
+      return buildCardEl(card,{locked:true,count:cnt});
+    }
+    // owned: clickable wrapper
+    var cardJson=JSON.stringify(card).replace(/"/g,'&quot;');
+    return '<div style="cursor:pointer" onclick="openCardZoom('+JSON.stringify(card).replace(/"/g,'\\&quot;').replace(/'/g,"\\'")+','+cnt+')">'+buildCardEl(card,{count:cnt})+'</div>';
+  }
+  // Simpler: bind via event delegation. Wrap each card with data attributes.
+  function cardWrapped(card,locked,cnt){
+    var inner=buildCardEl(card,{locked:locked,count:cnt});
+    if(locked) return inner;
+    var dataKind=card.kind;
+    var dataExtra=card.kind==='player'
+      ?('data-num="'+card.num+'" data-variant="'+card.variant+'" data-team="'+(card.team||'baseball')+'"')
+      :('data-special="'+card.specialId+'"');
+    return '<div class="coll-clickable" data-kind="'+dataKind+'" '+dataExtra+' data-count="'+cnt+'">'+inner+'</div>';
+  }
+  function addPlayer(p,team,variant){
+    total++;
+    var card={kind:'player',variant:variant,num:p.num,team:team};
+    var id=cardId(card), cnt=COLL.cards[id]||0;
+    if(cnt>0) owned++;
+    html+=cardWrapped(card,cnt===0,cnt);
+  }
+  if(currentCollTab==='standard'){
+    PL.forEach(function(p){addPlayer(p,'baseball','normal');});
+    SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','normal');});
+  } else if(currentCollTab==='foil'){
+    // Foil tab: only players with photos (others can't be pulled as foil anyway)
+    PL.forEach(function(p){if(NO_PHOTO_NUMS.indexOf(p.num)<0) addPlayer(p,'baseball','foil');});
+    SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','foil');});
+  } else {
+    CARD_SPECIALS.forEach(function(s){
+      total++;
+      var card={kind:'special',specialId:s.id};
+      var id=cardId(card), cnt=COLL.cards[id]||0;
+      if(cnt>0) owned++;
+      html+=cardWrapped(card,cnt===0,cnt);
+    });
+  }
+  meta.textContent=owned+' / '+total+' gesammelt';
+  grid.innerHTML=html;
+  // Bind click events via delegation
+  grid.querySelectorAll('.coll-clickable').forEach(function(el){
+    el.style.cursor='pointer';
+    el.addEventListener('click',function(){
+      var k=this.getAttribute('data-kind');
+      var cnt=parseInt(this.getAttribute('data-count'),10)||1;
+      var card;
+      if(k==='player'){
+        card={kind:'player',variant:this.getAttribute('data-variant'),num:parseInt(this.getAttribute('data-num'),10),team:this.getAttribute('data-team')||'baseball'};
+      } else {
+        card={kind:'special',specialId:this.getAttribute('data-special')};
+      }
+      openCardZoom(card,{count:cnt});
+    });
+  });
+}
+
+renderCollection();
+updateCooldownUI();
 
 // auto-scroll to grid when searching on mobile
 document.getElementById('search').addEventListener('focus',function(){
