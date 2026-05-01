@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flying Bats 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(180deg,#141414,#0a0a0a);padding:24px 20px 18px;text-align:center;border-bottom:1px solid rgba(245,166,35,.15)}
+.header-logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:2px}
+.header h1{font-family:'Oswald',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:700;
+  background:linear-gradient(135deg,#ffd700,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:3px;text-transform:uppercase}
+.header-sub{color:#475569;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-top:2px}
+.season-badge{display:inline-block;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);
+  color:#f5a623;padding:2px 12px;border-radius:20px;font-size:10px;letter-spacing:2px;margin-top:6px}
+
+/* ── SECTION NAV ── */
+.snav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,215,0,.12);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.snav-inner{display:flex;gap:2px;max-width:1600px;margin:0 auto;padding:0 12px}
+.snav a{flex-shrink:0;padding:12px 16px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;color:#64748b;text-decoration:none;
+  border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.snav a:hover{color:#cbd5e1}
+.snav a.active{color:#ffd700;border-bottom-color:#ffd700}
+.snav::-webkit-scrollbar{display:none}
+section[id]{scroll-margin-top:60px}
+
+/* ── CONTROLS ── */
+.controls{display:flex;gap:10px;padding:14px 20px;flex-wrap:wrap;align-items:center;max-width:1600px;margin:0 auto}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#475569;pointer-events:none}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  color:#fff;padding:9px 11px 9px 36px;border-radius:9px;font-size:13px;outline:none;transition:.2s}
+.search-input:focus{border-color:rgba(245,166,35,.4)}
+.search-input::placeholder{color:#334155}
+select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;
+  padding:9px 12px;border-radius:9px;font-size:13px;outline:none;cursor:pointer}
+select option{background:#1e293b}
+.stat-count{color:#475569;font-size:12px;white-space:nowrap}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;
+  padding:8px 20px 40px;max-width:1600px;margin:0 auto}
+
+/* ── PLAYER CARD (thumbnail) ── */
+.pc{position:relative;height:240px;border-radius:14px;overflow:hidden;cursor:pointer;
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+  transition:transform .2s, box-shadow .2s, border-color .2s}
+.pc:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.6);border-color:rgba(245,166,35,.3)}
+.pc:active{transform:scale(.98)}
+.pc-bg{position:absolute;inset:0;background:linear-gradient(145deg,#1a1a1a,#262626)}
+.pc-bg img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.pc-ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;color:rgba(245,166,35,.2);letter-spacing:2px}
+.pc-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,13,26,.1) 30%,rgba(6,13,26,.95) 100%)}
+.pc-num{position:absolute;top:10px;left:12px;font-family:'Oswald',sans-serif;font-size:40px;
+  font-weight:700;color:rgba(255,255,255,.1);line-height:1;user-select:none}
+.pc-bottom{position:absolute;bottom:0;left:0;right:0;padding:8px 10px 10px}
+.pc-name{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;
+  letter-spacing:.3px;line-height:1.2;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.pc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.pcs{background:rgba(0,0,0,.5);backdrop-filter:blur(6px);border-radius:5px;padding:3px 2px;text-align:center}
+.pcs-v{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#f5a623;line-height:1}
+.pcs-l{font-size:8px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+.pc-mvp{position:absolute;top:0;right:0;overflow:hidden;width:56px;height:56px;pointer-events:none;z-index:3}
+.pc-mvp span{position:absolute;top:12px;right:-16px;background:linear-gradient(135deg,#f5a623,#ffd700);
+  color:#0a0a0a;font-size:8px;font-weight:800;padding:2px 18px;transform:rotate(45deg)}
+
+/* Holo / Foil effect for MVP cards */
+.pc.holo::before{content:'';position:absolute;inset:0;border-radius:14px;pointer-events:none;z-index:2;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,215,0,.35) 45%,rgba(255,255,255,.7) 50%,rgba(255,140,200,.35) 55%,transparent 70%);
+  background-size:200% 200%;background-position:var(--hx,50%) var(--hy,50%);
+  mix-blend-mode:color-dodge;opacity:0;transition:opacity .25s}
+.pc.holo::after{content:'';position:absolute;inset:0;border-radius:14px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--ha,0deg) at var(--hx,50%) var(--hy,50%),#ff00cc,#ffd700,#00ffd5,#ff00cc);
+  mix-blend-mode:overlay;opacity:0;transition:opacity .25s}
+.pc.holo:hover::before{opacity:1}
+.pc.holo:hover::after{opacity:.55}
+.pc.holo{border-color:rgba(245,166,35,.45);box-shadow:0 4px 24px rgba(245,166,35,.15)}
+.pc.holo:hover{box-shadow:0 16px 50px rgba(245,166,35,.35),0 0 0 1px rgba(255,215,0,.3)}
+
+.status-badge{font-size:9px;font-weight:600;letter-spacing:1px;padding:2px 7px;border-radius:10px}
+.badge-active{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.35)}
+.badge-il{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.35)}
+.badge-inactive{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.25)}
+
+/* ── MODAL OVERLAY ── */
+.overlay{position:fixed;inset:0;background:rgba(6,13,26,.88);backdrop-filter:blur(6px);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:all}
+
+/* ── MODAL CARD ── */
+.modal{width:min(560px,96vw);max-height:92vh;background:linear-gradient(160deg,#1a1a1a,#141414);
+  border-radius:20px;border:1px solid rgba(245,166,35,.2);box-shadow:0 32px 80px rgba(0,0,0,.8);
+  display:flex;flex-direction:column;overflow:hidden;position:relative;
+  transform:scale(.92) translateY(20px);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.overlay.open .modal{transform:scale(1) translateY(0)}
+
+.modal-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:#fff;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  z-index:10;transition:.2s;line-height:1;backdrop-filter:blur(8px)}
+.modal-close:hover{background:rgba(239,68,68,.4);color:#fff;border-color:rgba(239,68,68,.5);transform:scale(1.05)}
+
+/* Tabs at top */
+.modal-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(10px);position:relative;z-index:5}
+.tab-btn{flex:1;padding:13px 4px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:#475569;background:none;border:none;cursor:pointer;transition:.2s;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab-btn:hover{color:#94a3b8}
+.tab-btn.active{color:#f5a623;border-bottom-color:#f5a623}
+
+/* Tab content */
+.modal-body{flex:1;overflow-y:auto;min-height:0;position:relative}
+.modal-body::-webkit-scrollbar{width:4px}
+.modal-body::-webkit-scrollbar-thumb{background:rgba(245,166,35,.2);border-radius:2px}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.tab-pane.with-pad{padding:18px}
+
+/* ── HERO (Spieler tab) ── */
+.hero{position:relative;min-height:560px;display:flex;flex-direction:column}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(145deg,#1a1a1a,#262626);overflow:hidden}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.hero-ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Oswald',sans-serif;font-size:140px;font-weight:700;color:rgba(245,166,35,.12);letter-spacing:6px}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,13,26,.05) 0%,rgba(6,13,26,.1) 40%,rgba(6,13,26,.85) 80%,rgba(6,13,26,.98) 100%)}
+.hero-num{position:absolute;top:18px;left:22px;font-family:'Oswald',sans-serif;font-size:88px;
+  font-weight:700;color:rgba(255,255,255,.1);line-height:.85;user-select:none;letter-spacing:-3px;z-index:2}
+.hero-mvp{position:absolute;top:0;right:0;overflow:hidden;width:90px;height:90px;pointer-events:none;z-index:2}
+.hero-mvp span{position:absolute;top:20px;right:-26px;background:linear-gradient(135deg,#f5a623,#ffd700);
+  color:#0a0a0a;font-size:10px;font-weight:800;padding:4px 28px;transform:rotate(45deg);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hero-info{position:relative;margin-top:auto;padding:20px 22px 22px;z-index:3}
+.hero-badges{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.hero-name{font-family:'Oswald',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px;color:#fff;
+  line-height:1.05;margin-bottom:14px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.hero-stat{background:rgba(0,0,0,.55);backdrop-filter:blur(10px);border-radius:10px;padding:10px 6px;
+  text-align:center;border:1px solid rgba(255,255,255,.06)}
+.hero-stat-v{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:#ffd700;line-height:1}
+.hero-stat-l{font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.hero-empty{position:relative;z-index:3;padding:20px 22px;color:#94a3b8;font-size:13px;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(10px);border-radius:10px;margin:0 16px 16px;text-align:center}
+
+/* Stat blocks */
+.sblock{margin-bottom:14px}
+.sblock-title{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:6px}
+.srow{display:grid;gap:4px;margin-bottom:4px}
+.scell{background:rgba(255,255,255,.04);border-radius:8px;padding:7px 6px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.scell-lbl{font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.scell-val{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#e2e8f0;line-height:1}
+.scell-val.hi{color:#ffd700}
+.scell-val.go{color:#4ade80}
+.no-data{font-size:12px;color:#334155;padding:8px 0}
+
+/* Stat bars */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-lbl{font-size:10px;color:#64748b;width:30px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#f5a623,#ffd700);transition:width .8s ease}
+.bar-val{font-family:'Oswald',sans-serif;font-size:11px;color:#f5a623;width:36px;flex-shrink:0}
+
+/* Highlights */
+.yt-card{display:block;text-decoration:none;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);margin-bottom:12px;
+  transition:border-color .2s, transform .2s}
+.yt-card:hover{border-color:rgba(245,166,35,.35);transform:scale(1.01)}
+.yt-embed-wrap{position:relative;padding-top:56.25%;background:#000;overflow:hidden}
+.yt-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.yt-thumb-wrap{position:absolute;inset:0;cursor:pointer;background:#000}
+.yt-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%);transition:.2s}
+.yt-thumb-wrap:hover .yt-play-btn{background:linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(0,0,0,.35) 100%)}
+.yt-play-circle{width:64px;height:64px;border-radius:50%;background:#ffd700;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+  box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 0 6px rgba(255,215,0,.15)}
+.yt-thumb-wrap:hover .yt-play-circle{background:#fff;transform:scale(1.1);box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 0 10px rgba(255,215,0,.2)}
+.yt-info{padding:10px 12px;background:rgba(0,0,0,.25)}
+.yt-label{font-size:13px;font-weight:600;color:#e2e8f0}
+.yt-meta{font-size:11px;color:#64748b;margin-top:2px}
+.yt-open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  font-size:11px;color:#f5a623;text-decoration:none;letter-spacing:.5px;
+  padding:4px 10px;border:1px solid rgba(245,166,35,.3);border-radius:6px;transition:.2s}
+.yt-open-btn:hover{background:rgba(245,166,35,.1)}
+.yt-empty{text-align:center;padding:32px 16px;color:#334155;font-size:12px;
+  border:1px dashed rgba(245,166,35,.12);border-radius:10px;line-height:1.8}
+
+.empty-state{grid-column:1/-1;text-align:center;padding:64px;color:#334155;font-size:14px}
+
+/* ── SECTION HEADERS ── */
+.section{max-width:1600px;margin:0 auto;padding:8px 20px 0}
+.section-title{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:#94a3b8;margin:18px 0 12px;display:flex;align-items:center;gap:10px}
+.section-title::before{content:'';width:4px;height:16px;background:linear-gradient(180deg,#ffd700,#f5a623);border-radius:2px}
+.section-title span{color:#475569;font-size:11px;letter-spacing:1px;font-weight:400;margin-left:auto}
+
+/* ── LEADERBOARDS ── */
+.lb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:0 20px;max-width:1600px;margin:0 auto 8px}
+.lb-card{background:linear-gradient(160deg,#1a1a1a,#141414);border:1px solid rgba(255,215,0,.12);
+  border-radius:12px;padding:12px 14px;transition:.2s}
+.lb-card:hover{border-color:rgba(255,215,0,.3)}
+.lb-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.lb-icon{font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;color:#ffd700;
+  background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);padding:2px 8px;border-radius:6px;letter-spacing:1.5px}
+.lb-cat{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.lb-row{display:flex;align-items:center;gap:10px;padding:6px 4px;cursor:pointer;border-radius:6px;transition:.15s}
+.lb-row:hover{background:rgba(255,215,0,.06)}
+.lb-rank{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;width:22px;text-align:center;line-height:1}
+.lb-rank.r1{color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.5)}
+.lb-rank.r2{color:#cbd5e1}
+.lb-rank.r3{color:#a07845}
+.lb-name{flex:1;font-size:12px;color:#e2e8f0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-num{font-size:10px;color:#64748b;margin-right:4px}
+.lb-val{font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;color:#ffd700;line-height:1}
+.lb-empty{font-size:11px;color:#334155;padding:6px 4px;font-style:italic}
+
+/* ── GAME LOG ── */
+.gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding:0 20px 32px;max-width:1600px;margin:0 auto}
+.gl-card{background:linear-gradient(160deg,#1a1a1a,#141414);border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;padding:16px;transition:.2s;position:relative;overflow:hidden}
+.gl-card{cursor:pointer}
+.gl-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.gl-card.win{border-color:rgba(74,222,128,.25)}
+.gl-card.win::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#4ade80,#22c55e)}
+.gl-card.loss{border-color:rgba(239,68,68,.25)}
+.gl-card.loss::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#f87171,#ef4444)}
+.gl-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase}
+.gl-result{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.gl-wl{font-family:'Oswald',sans-serif;font-size:24px;font-weight:700;line-height:1}
+.gl-wl.win{color:#4ade80}
+.gl-wl.loss{color:#f87171}
+.gl-score{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:#fff;line-height:1}
+.gl-vs{font-size:13px;color:#94a3b8;margin-bottom:10px}
+.gl-vs strong{color:#fff;font-weight:600}
+.gl-stats{display:flex;gap:14px;font-size:11px;color:#64748b;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.gl-stats b{font-family:'Oswald',sans-serif;font-size:13px;color:#e2e8f0;font-weight:600;display:block}
+.gl-mvp{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:8px 0 10px;
+  background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(255,215,0,.08));
+  border:1px solid rgba(255,215,0,.25);border-radius:8px;cursor:pointer;transition:.2s}
+.gl-mvp:hover{background:linear-gradient(135deg,rgba(245,166,35,.25),rgba(255,215,0,.15));border-color:rgba(255,215,0,.5)}
+.gl-mvp-tag{font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;padding:2px 8px;border-radius:4px}
+.gl-mvp-name{font-size:12px;color:#ffd700;font-weight:600}
+
+/* ── GAME MODAL ── */
+.gm-hero{position:relative;padding:32px 24px 24px;background:linear-gradient(160deg,#1a1a1a,#0a0a0a);
+  border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden}
+.gm-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.gm-hero.win::before{background:linear-gradient(90deg,#4ade80,#22c55e)}
+.gm-hero.loss::before{background:linear-gradient(90deg,#f87171,#ef4444)}
+.gm-meta{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:14px}
+.gm-result{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.gm-wl{font-family:'Oswald',sans-serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:2px}
+.gm-wl.win{color:#4ade80;text-shadow:0 0 20px rgba(74,222,128,.4)}
+.gm-wl.loss{color:#f87171}
+.gm-score{font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;color:#fff;line-height:1}
+.gm-vs{font-size:15px;color:#94a3b8;margin-top:6px}
+.gm-vs strong{color:#fff;font-weight:600}
+.gm-notes{font-size:12px;color:#64748b;margin-top:10px;font-style:italic}
+.gm-body{padding:18px 22px 26px}
+.gm-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.gm-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:10px 6px;text-align:center}
+.gm-stat-v{font-family:'Oswald',sans-serif;font-size:24px;font-weight:700;color:#ffd700;line-height:1}
+.gm-stat-l{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.gm-section{margin-bottom:18px}
+.gm-sec-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#475569;margin-bottom:10px}
+.gm-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gm-chip{display:inline-flex;align-items:center;padding:6px 12px;background:rgba(255,215,0,.08);
+  border:1px solid rgba(255,215,0,.2);border-radius:20px;font-size:12px;color:#e2e8f0;
+  cursor:pointer;transition:.15s}
+.gm-chip:hover{background:rgba(255,215,0,.18);border-color:rgba(255,215,0,.4);color:#ffd700}
+.gm-chip-mvp{background:linear-gradient(135deg,rgba(245,166,35,.2),rgba(255,215,0,.12));
+  border-color:rgba(255,215,0,.5);color:#ffd700;font-weight:600;gap:6px}
+.gm-chip-mvp:hover{background:linear-gradient(135deg,rgba(245,166,35,.35),rgba(255,215,0,.25))}
+.gm-chip-tag{font-family:'Oswald',sans-serif;font-size:8px;font-weight:800;letter-spacing:1px;
+  background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;padding:2px 6px;border-radius:3px}
+.gm-perf{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:10px 12px;margin-bottom:6px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,215,0,.1);border-radius:10px;
+  cursor:pointer;transition:.15s;align-items:center}
+.gm-perf:hover{background:rgba(255,215,0,.06);border-color:rgba(255,215,0,.3)}
+.gm-perf-mvp{font-family:'Oswald',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;
+  background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;padding:3px 8px;border-radius:4px;
+  grid-row:1/3;align-self:center}
+.gm-perf-name{font-size:13px;color:#fff;font-weight:600;line-height:1.2}
+.gm-perf-stats{font-size:11px;color:#94a3b8;letter-spacing:.3px}
+.gm-empty{font-size:12px;color:#475569;padding:14px;text-align:center;
+  background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);border-radius:10px}
+
+/* ── LEAGUE TABLE ── */
+.lg-wrap{display:grid;grid-template-columns:2fr 1fr;gap:14px;padding:0 20px 16px;max-width:1600px;margin:0 auto}
+.lg-table-wrap{background:linear-gradient(160deg,#1a1a1a,#141414);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;overflow-x:auto}
+.lg-table{width:100%;border-collapse:collapse;font-size:12px;color:#e2e8f0}
+.lg-table th{text-align:left;font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:#64748b;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.08)}
+.lg-table th:first-child,.lg-table td:first-child{text-align:center;width:30px}
+.lg-table th:nth-child(3),.lg-table th:nth-child(4),.lg-table th:nth-child(5),.lg-table th:nth-child(6),
+.lg-table td:nth-child(3),.lg-table td:nth-child(4),.lg-table td:nth-child(5),.lg-table td:nth-child(6){text-align:center}
+.lg-table td{padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.04)}
+.lg-pos{font-family:'Oswald',sans-serif;font-weight:700;color:#94a3b8;font-size:14px}
+.lg-team{font-weight:500}
+.lg-pct{font-family:'Oswald',sans-serif;font-weight:600;color:#cbd5e1}
+.st-w{color:#4ade80;font-family:'Oswald',sans-serif;font-weight:600}
+.st-l{color:#f87171;font-family:'Oswald',sans-serif;font-weight:600}
+.lg-table tr.us{background:linear-gradient(90deg,rgba(245,166,35,.12),rgba(255,215,0,.04))}
+.lg-table tr.us .lg-pos{color:#ffd700}
+.lg-table tr.us .lg-team{color:#ffd700;font-weight:600}
+.lg-us-tag{display:inline-block;background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:8px;font-weight:800;letter-spacing:1.5px;
+  padding:2px 6px;border-radius:3px;margin-left:6px;vertical-align:middle}
+.lg-source{margin-top:10px;text-align:right}
+.lg-source a{font-size:10px;color:#475569;text-decoration:none;letter-spacing:.5px;transition:.2s}
+.lg-source a:hover{color:#ffd700}
+
+.lg-upcoming{display:flex;flex-direction:column;gap:8px}
+.lg-upcoming-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:#64748b;margin-bottom:4px;padding:0 4px}
+.lg-up-card{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
+  background:linear-gradient(160deg,#1a1a1a,#141414);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:12px 14px;transition:.2s}
+.lg-up-card:hover{border-color:rgba(255,215,0,.25);transform:translateY(-1px)}
+.lg-up-date{text-align:center;border-right:1px solid rgba(255,255,255,.07);padding-right:14px;min-width:54px}
+.lg-up-day{font-size:9px;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.lg-up-num{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:#ffd700;line-height:1.1}
+.lg-up-time{font-size:10px;color:#94a3b8;margin-top:2px}
+.lg-up-vs{font-size:13px;color:#e2e8f0;line-height:1.2}
+.lg-up-vs strong{color:#fff;font-weight:600}
+.lg-up-loc{font-size:10px;color:#64748b;margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+
+@media(max-width:768px){
+  .lg-wrap{grid-template-columns:1fr;gap:10px;padding:0 14px 16px}
+  .lg-table{font-size:11px}
+  .lg-table th,.lg-table td{padding:7px 4px}
+  .lg-team{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+  .lg-us-tag{font-size:7px;padding:1px 4px;margin-left:3px}
+  .gl-grid{grid-template-columns:1fr;padding:0 14px 24px}
+}
+@media(max-width:380px){
+  .lg-team{max-width:120px;font-size:10px}
+  .lg-table th,.lg-table td{padding:6px 3px}
+}
+
+
+@media(max-width:480px){
+  .modal{width:100vw;max-height:100vh;height:100vh;border-radius:0;border:none}
+  .overlay{align-items:stretch}
+  .overlay.open .modal{transform:none}
+  .hero{min-height:calc(100vh - 46px)}
+  .hero-name{font-size:26px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:8px 14px 32px}
+  .pc{height:210px}
+  .gm-wl{font-size:32px}
+  .gm-score{font-size:42px}
+  .gm-stat-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <img src="logo.png" alt="Flying Bats Logo" style="width:54px;height:54px;object-fit:contain">
+    <h1>Flying Bats</h1>
+  </div>
+  <div class="header-sub">Duisburg Baseball</div>
+  <div class="season-badge">SAISON 2026</div>
+</div>
+
+<nav class="snav"><div class="snav-inner">
+  <a href="#sec-players" class="active">Spieler</a>
+  <a href="#sec-leaderboards">Leaderboards</a>
+  <a href="#sec-league">Liga</a>
+  <a href="#sec-games">Spiele</a>
+</div></nav>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input class="search-input" type="text" id="search" placeholder="Spieler suchen..." oninput="render()">
+  </div>
+  <select id="sortBy" onchange="render()">
+    <option value="num">Trikotnummer</option>
+    <option value="avg">AVG</option>
+    <option value="ops">OPS</option>
+    <option value="rbi">RBI</option>
+    <option value="runs">Runs</option>
+    <option value="sb">SB</option>
+    <option value="mvp_pts">MVP Punkte</option>
+  </select>
+  <select id="filterBy" onchange="render()">
+    <option value="all">Alle Spieler</option>
+    <option value="active">Mit Spielen</option>
+  </select>
+  <span class="stat-count" id="count"></span>
+</div>
+
+<section id="sec-players">
+  <div class="section"><div class="section-title">Spieler</div></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="sec-leaderboards">
+  <div class="section"><div class="section-title">Leaderboards <span>Saison 2026</span></div></div>
+  <div class="lb-grid" id="leaderboards"></div>
+</section>
+
+<section id="sec-league">
+  <div class="section"><div class="section-title">Liga <span id="leagueMeta"></span></div></div>
+  <div class="lg-wrap">
+    <div class="lg-table-wrap">
+      <table class="lg-table" id="leagueTable"></table>
+      <div class="lg-source"><a id="lgSource" href="#" target="_blank" rel="noopener">Quelle: BSV NRW &rarr;</a></div>
+    </div>
+    <div class="lg-upcoming" id="leagueUpcoming"></div>
+  </div>
+</section>
+
+<section id="sec-games">
+  <div class="section"><div class="section-title">Spiele <span id="gameCount"></span></div></div>
+  <div class="gl-grid" id="gameLog"></div>
+</section>
+
+<!-- GAME MODAL -->
+<div class="overlay" id="gameOverlay" onclick="gameOverlayClick(event)">
+  <div class="modal" id="gameModal" style="width:min(720px,96vw)">
+    <button class="modal-close" onclick="closeGameModal()">&#x2715;</button>
+    <div class="modal-body" id="gameModalBody" style="padding:0"></div>
+  </div>
+</div>
+
+<!-- PLAYER MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <div class="modal-tabs">
+      <button class="tab-btn active" onclick="showTab(0)">Spieler</button>
+      <button class="tab-btn" onclick="showTab(1)">Offense</button>
+      <button class="tab-btn" onclick="showTab(2)">Defense</button>
+      <button class="tab-btn" onclick="showTab(3)">Highlights</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-pane active" id="tab0"></div>
+      <div class="tab-pane with-pad" id="tab1"></div>
+      <div class="tab-pane with-pad" id="tab2"></div>
+      <div class="tab-pane with-pad" id="tab3"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var PL = [{"num":2,"name":"TIM ELFRINK","games":2,"status":"2","pa":8,"ab":5,"1b":2,"2b":2,"3b":0,"hr":0,"h":4,"tb":6,"bb":3,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":0,"sb":1,"cs":0,"runs":3,"rbi":2,"avg":0.8,"obp":0.875,"slg":1.2,"ops":2.075,"tb_pts":6,"mvp_pts":2,"youtube":[],"fielding":{"inn":11.5,"inn_outs":1,"assists":1,"e":0,"dp":0,"c_sb":6,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":9,"name":"HUANG TZU-CHENG (DAVID)","games":1,"status":"1","pa":5,"ab":4,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":1,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":2,"k":1,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0.2,"slg":0,"ops":0.2,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":6.5,"inn_outs":4,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":10,"name":"FELIX SCHOENFELDER","games":2,"status":"2","pa":8,"ab":7,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":4,"k":1,"sb":2,"cs":0,"runs":1,"rbi":2,"avg":0.143,"obp":0.25,"slg":0.143,"ops":0.393,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":11.5,"inn_outs":2,"assists":2,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":1,"w":0,"l":0,"sv":0,"so":1,"pk":2,"h":1,"r":6,"hr":0,"bb":6,"hbp":1,"wp":0}},{"num":11,"name":"ANDRE LEHNHOFF","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":14,"name":"ANDRE PLITT","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":15,"name":"DENIS DEKTYAROV","games":0,"status":"0/2","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":16,"name":"JORDAN GRUEN","games":0,"status":"IL","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":17,"name":"JAN UWE FELDMANN (JUF)","games":1,"status":"1","pa":2,"ab":2,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":1,"mvp_pts":0,"youtube":[{"id":"xKpJXe3S9Qc","start":7133,"label":"Hit vs. Gegner"}],"fielding":{"inn":2,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":18,"name":"STEFAN BOSBACH","games":2,"status":"2","pa":8,"ab":6,"1b":3,"2b":0,"3b":0,"hr":0,"h":3,"tb":3,"bb":2,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":2,"sb":3,"cs":0,"runs":3,"rbi":1,"avg":0.5,"obp":0.625,"slg":0.5,"ops":1.125,"tb_pts":3,"mvp_pts":9,"youtube":[],"fielding":{"inn":11.5,"inn_outs":3,"assists":2,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":5,"w":0,"l":1,"sv":0,"so":7,"pk":0,"h":4,"r":4,"hr":0,"bb":4,"hbp":1,"wp":5}},{"num":21,"name":"RENE LASPE","games":1,"status":"1","pa":4,"ab":4,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.25,"obp":0.25,"slg":0.25,"ops":0.5,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":5,"inn_outs":0,"assists":1,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":22,"name":"FABIAN HERMANS","games":1,"status":"1","pa":4,"ab":3,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":2,"sb":1,"cs":0,"runs":1,"rbi":0,"avg":0.333,"obp":0.5,"slg":0.333,"ops":0.833,"tb_pts":1,"mvp_pts":0,"youtube":[],"fielding":{"inn":5.5,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":32,"name":"NIKLAS WINGARZ","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":35,"name":"MARCEL PUSCH","games":1,"status":"1","pa":4,"ab":4,"1b":2,"2b":0,"3b":0,"hr":0,"h":2,"tb":2,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":2,"sb":1,"cs":0,"runs":1,"rbi":2,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":2,"mvp_pts":0,"youtube":[],"fielding":{"inn":5,"inn_outs":2,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":4,"w":1,"l":0,"sv":0,"so":5,"pk":0,"h":1,"r":0,"hr":0,"bb":1,"hbp":0,"wp":0}},{"num":43,"name":"SERHAN SAHAN","games":1,"status":"1","pa":4,"ab":4,"1b":2,"2b":0,"3b":0,"hr":0,"h":2,"tb":2,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":2,"k":0,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.5,"obp":0.5,"slg":0.5,"ops":1.0,"tb_pts":2,"mvp_pts":4,"youtube":[],"fielding":{"inn":6.5,"inn_outs":1,"assists":1,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":44,"name":"HUANG CHIEN-CHUN (JETER)","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":46,"name":"JUSTUS BERTELMANN","games":2,"status":"2","pa":9,"ab":9,"1b":1,"2b":1,"3b":0,"hr":0,"h":2,"tb":3,"bb":0,"hbp":0,"fc":1,"e_bat":2,"sf":0,"sh":0,"outs":3,"k":1,"sb":0,"cs":0,"runs":4,"rbi":0,"avg":0.222,"obp":0.222,"slg":0.333,"ops":0.556,"tb_pts":3,"mvp_pts":0,"youtube":[],"fielding":{"inn":11.5,"inn_outs":1,"assists":4,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":64,"name":"BJOERN BULENDA","games":2,"status":"2","pa":6,"ab":5,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":1,"hbp":0,"fc":1,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":2,"sb":1,"cs":0,"runs":2,"rbi":0,"avg":0.2,"obp":0.333,"slg":0.2,"ops":0.533,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":8.5,"inn_outs":4,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":72,"name":"ARSIM KRASNIC","games":1,"status":"1","pa":2,"ab":2,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":1,"sf":0,"sh":0,"outs":0,"k":1,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":{"inn":3,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":76,"name":"DANYLO CHERKASHENKO","games":2,"status":"2","pa":3,"ab":3,"1b":1,"2b":0,"3b":0,"hr":0,"h":1,"tb":1,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":1,"rbi":1,"avg":0.333,"obp":0.333,"slg":0.333,"ops":0.667,"tb_pts":1,"mvp_pts":0,"youtube":[{"id":"xKpJXe3S9Qc","start":4057,"label":"Highlight"}],"fielding":{"inn":4,"inn_outs":0,"assists":0,"e":0,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":0,"hbp":0,"wp":0}},{"num":85,"name":"BERKAY GOEK","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":86,"name":"KEVIN SCHANZ","games":0,"status":"-","pa":0,"ab":0,"1b":0,"2b":0,"3b":0,"hr":0,"h":0,"tb":0,"bb":0,"hbp":0,"fc":0,"e_bat":0,"sf":0,"sh":0,"outs":0,"k":0,"sb":0,"cs":0,"runs":0,"rbi":0,"avg":0,"obp":0,"slg":0,"ops":0,"tb_pts":0,"mvp_pts":0,"youtube":[],"fielding":null},{"num":87,"name":"BEN CHAREST","games":2,"status":"2","pa":7,"ab":5,"1b":1,"2b":1,"3b":0,"hr":0,"h":2,"tb":3,"bb":2,"hbp":0,"fc":1,"e_bat":1,"sf":0,"sh":0,"outs":1,"k":1,"sb":1,"cs":0,"runs":3,"rbi":0,"avg":0.4,"obp":0.571,"slg":0.6,"ops":1.171,"tb_pts":3,"mvp_pts":2,"youtube":[],"fielding":{"inn":11.5,"inn_outs":3,"assists":0,"e":1,"dp":0,"c_sb":0,"c_cs":0,"c_pb":0,"ip":0.1,"w":0,"l":0,"sv":0,"so":0,"pk":0,"h":0,"r":0,"hr":0,"bb":1,"hbp":0,"wp":0}}];
+
+// ── LEAGUE TABLE (BSV NRW Bezirksliga, Saison 2026) ──
+var OUR_TEAM = "Duisburg Flying Bats e.V.";
+var LEAGUE = {
+  name: "Bezirksliga Herren",
+  season: 2026,
+  source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6370&bsm_season=2026",
+  standings: [
+    {pos:1, team:"Krefeld Crows",            w:1, l:0, pct:1.000, streak:"W1"},
+    {pos:2, team:"Neunkirchen Nightmares 3", w:1, l:0, pct:1.000, streak:"W1"},
+    {pos:3, team:"Duisburg Flying Bats e.V.",w:1, l:1, pct:0.500, streak:"W1"},
+    {pos:4, team:"Düsseldorf Senators 2",    w:1, l:1, pct:0.500, streak:"L1"},
+    {pos:5, team:"Dortmund Wanderers 3",     w:0, l:0, pct:0.000, streak:"—"},
+    {pos:6, team:"Wassenberg Squirrels",     w:0, l:1, pct:0.000, streak:"L1"},
+    {pos:7, team:"Kapellen Turtles",         w:0, l:1, pct:0.000, streak:"L1"}
+  ],
+  schedule: [
+    {date:"2026-05-09", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Krefeld Crows", result:null},
+    {date:"2026-05-17", time:"15:00", home:"Kapellen Turtles", away:"Duisburg Flying Bats e.V.", result:null},
+    {date:"2026-06-06", time:"13:00", home:"Wassenberg Squirrels", away:"Duisburg Flying Bats e.V.", result:null},
+    {date:"2026-06-28", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Neunkirchen Nightmares 3", result:null},
+    {date:"2026-07-04", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Düsseldorf Senators 2", result:null},
+    {date:"2026-07-12", time:"15:00", home:"Krefeld Crows", away:"Duisburg Flying Bats e.V.", result:null},
+    {date:"2026-08-29", time:"18:00", home:"Dortmund Wanderers 3", away:"Duisburg Flying Bats e.V.", result:null},
+    {date:"2026-09-05", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Dortmund Wanderers 3", result:null},
+    {date:"2026-09-12", time:"15:00", home:"Duisburg Flying Bats e.V.", away:"Wassenberg Squirrels", result:null},
+    {date:"2026-09-20", time:"13:00", home:"Duisburg Flying Bats e.V.", away:"Kapellen Turtles", result:null}
+  ]
+};
+
+// ── GAMES ──
+var GAMES = [
+  {
+    id:1, date:"2026-04-19", opponent:"Neunkirchen Nightmares 3", venue:"Neunkirchen",
+    home:false, score_us:9, score_them:10,
+    hits_us:4, errors_us:5, hits_them:7, errors_them:5,
+    spielnr:"13206", liga:"BZL 42",
+    pitcher_nums:[10,18,87],
+    lineup:[22,76,46,9,2,35,18,43,10,87,72,64],
+    mvp_num:18,
+    video_id:null,
+    notes:"Knappe Auswärtsniederlage"
+  },
+  {
+    id:2, date:"2026-04-26", opponent:"Düsseldorf Senators", venue:"Düsseldorf",
+    home:false, score_us:13, score_them:0,
+    hits_us:14, errors_us:1, hits_them:1, errors_them:6,
+    spielnr:"13209", liga:"BZL 42",
+    pitcher_nums:[35,18],
+    lineup:[21,10,46,2,35,18,76,17,64,87],
+    video_id:"xKpJXe3S9Qc",
+    notes:"Souveräner Auswärtssieg"
+  }
+];
+
+// ── helpers ──
+function a3(v){ return v>0?'.'+String(Math.round(v*1000)).padStart(3,'0'):'-'; }
+function ini(n){ return n.split(' ').filter(function(w){return w&&w[0]!='(';}).slice(0,2).map(function(w){return w[0];}).join(''); }
+function bdg(p){
+  if(p.status==='IL') return '<span class="status-badge badge-il">IL</span>';
+  if(p.status==='0/2') return '<span class="status-badge badge-inactive">0/2</span>';
+  if(p.games>0) return '<span class="status-badge badge-active">'+p.games+(p.games>1?' Spiele':' Spiel')+'</span>';
+  return '<span class="status-badge badge-inactive">Kein Einsatz</span>';
+}
+function sc(l,v,c){
+  var d=(v===0||v==='0')?'0':(v||'-');
+  return '<div class="scell"><div class="scell-lbl">'+l+'</div><div class="scell-val'+(c?' '+c:'')+'">'+d+'</div></div>';
+}
+function bar(l,v,max){
+  var pct=max>0?Math.min(100,Math.round(v/max*100)):0;
+  var d=v>0?(l==='AVG'||l==='OBP'||l==='SLG'?a3(v):v):'-';
+  return '<div class="bar-row"><div class="bar-lbl">'+l+'</div>'+
+    '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="bar-val">'+d+'</div></div>';
+}
+
+// ── THUMBNAIL CARD ──
+function buildThumb(p){
+  var n=p.num, hasStats=p.games>0;
+  var imgHtml='<img src="'+n+'.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block" onerror="this.style.display=\'none\'">';
+  var holoCls=p.mvp_pts>0?' holo':'';
+  return '<div class="pc'+holoCls+'" onclick="openModal('+n+')" onmousemove="holoMove(event,this)" onmouseleave="holoReset(this)">'+
+    '<div class="pc-bg">'+imgHtml+'</div>'+
+    '<div class="pc-ini">'+ini(p.name)+'</div>'+
+    '<div class="pc-grad"></div>'+
+    '<div class="pc-num">#'+n+'</div>'+
+    (p.mvp_pts>0?'<div class="pc-mvp"><span>MVP '+p.mvp_pts+'</span></div>':'')+
+    '<div class="pc-bottom">'+
+      '<div class="pc-name">'+p.name+'</div>'+
+      '<div class="pc-badges">'+bdg(p)+'</div>'+
+      (hasStats?
+        '<div class="pc-stats">'+
+          '<div class="pcs"><div class="pcs-v">'+a3(p.avg)+'</div><div class="pcs-l">AVG</div></div>'+
+          '<div class="pcs"><div class="pcs-v">'+p.h+'</div><div class="pcs-l">Hits</div></div>'+
+          '<div class="pcs"><div class="pcs-v">'+p.rbi+'</div><div class="pcs-l">RBI</div></div>'+
+          '<div class="pcs"><div class="pcs-v">'+p.sb+'</div><div class="pcs-l">SB</div></div>'+
+        '</div>':'')+
+    '</div>'+
+  '</div>';
+}
+
+// ── MODAL ──
+var currentTab=0;
+var currentPlayer=null;
+
+function openModal(num){
+  var p=null;
+  for(var i=0;i<PL.length;i++){if(PL[i].num===num){p=PL[i];break;}}
+  if(!p) return;
+  currentPlayer=p;
+
+  buildTabPlayer(p);
+  buildTabOffense(p);
+  buildTabDefense(p);
+  buildTabHighlights(p);
+
+  showTab(0);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow='';
+  // Stop any playing videos
+  document.getElementById('tab3').innerHTML='';
+  if(currentPlayer) buildTabHighlights(currentPlayer);
+}
+
+function overlayClick(e){
+  if(e.target===document.getElementById('overlay')) closeModal();
+}
+
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+function showTab(i){
+  currentTab=i;
+  var btns=document.querySelectorAll('.tab-btn');
+  var panes=document.querySelectorAll('.tab-pane');
+  for(var j=0;j<btns.length;j++){
+    btns[j].classList.toggle('active',j===i);
+    panes[j].classList.toggle('active',j===i);
+  }
+}
+
+function buildTabPlayer(p){
+  var hasStats=p.games>0;
+  var num=p.num;
+  var statsBlock = hasStats
+    ? '<div class="hero-stats">'+
+        '<div class="hero-stat"><div class="hero-stat-v">'+a3(p.avg)+'</div><div class="hero-stat-l">AVG</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-v">'+p.h+'</div><div class="hero-stat-l">Hits</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-v">'+p.rbi+'</div><div class="hero-stat-l">RBI</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-v">'+(p.ops>0?a3(p.ops):'-')+'</div><div class="hero-stat-l">OPS</div></div>'+
+      '</div>'
+    : '<div class="hero-empty">Noch kein Einsatz in dieser Saison</div>';
+  var mvpRibbon = p.mvp_pts>0 ? '<div class="hero-mvp"><span>MVP '+p.mvp_pts+'</span></div>' : '';
+  var html =
+    '<div class="hero">'+
+      '<div class="hero-bg"><img src="'+num+'.jpg" alt="" id="heroImg'+num+'"></div>'+
+      '<div class="hero-ini">'+ini(p.name)+'</div>'+
+      '<div class="hero-grad"></div>'+
+      '<div class="hero-num">#'+num+'</div>'+
+      mvpRibbon+
+      '<div class="hero-info">'+
+        '<div class="hero-badges">'+bdg(p)+'</div>'+
+        '<div class="hero-name">'+p.name+'</div>'+
+        statsBlock+
+      '</div>'+
+    '</div>';
+  document.getElementById('tab0').innerHTML=html;
+  var img=document.getElementById('heroImg'+num);
+  if(img) img.onerror=function(){this.style.display='none';};
+}
+
+function buildTabOffense(p){
+  var html='';
+  if(p.games>0){
+    html='<div class="sblock"><div class="sblock-title">Batting Line</div>'+
+      '<div class="srow" style="grid-template-columns:repeat(5,1fr)">'+
+        sc('PA',p.pa)+sc('AB',p.ab)+sc('H',p.h,p.h>=3?'hi':'')+sc('2B',p['2b'],p['2b']>0?'go':'')+sc('HR',p.hr,p.hr>0?'go':'')+
+      '</div>'+
+      '<div class="srow" style="grid-template-columns:repeat(5,1fr)">'+
+        sc('BB',p.bb)+sc('HBP',p.hbp)+sc('K',p.k)+sc('FC',p.fc)+sc('SF',p.sf)+
+      '</div>'+
+    '</div>'+
+    '<div class="sblock"><div class="sblock-title">Ratios</div>'+
+      bar('AVG',p.avg,1.0)+bar('OBP',p.obp,1.0)+bar('SLG',p.slg,2.0)+bar('OPS',p.ops,3.0)+
+    '</div>';
+  } else {
+    html='<div class="no-data">Noch keine Batting-Stats.</div>';
+  }
+  document.getElementById('tab1').innerHTML=html;
+}
+
+function buildTabDefense(p){
+  var f=p.fielding, html='';
+  if(f&&f.inn>0){
+    html='<div class="sblock"><div class="sblock-title">Fielding</div>'+
+      '<div class="srow" style="grid-template-columns:repeat(4,1fr)">'+
+        sc('INN',f.inn)+sc('Outs',f.inn_outs)+sc('A',f.assists)+sc('E',f.e)+
+      '</div>';
+    if(f.c_sb>0||f.c_cs>0||f.c_pb>0){
+      html+='<div class="srow" style="grid-template-columns:repeat(3,1fr)">'+
+        sc('C-SB',f.c_sb)+sc('C-CS',f.c_cs)+sc('C-PB',f.c_pb)+
+      '</div>';
+    }
+    html+='</div>';
+    if(f.ip>0){
+      html+='<div class="sblock"><div class="sblock-title">Pitching</div>'+
+        '<div class="srow" style="grid-template-columns:repeat(5,1fr)">'+
+          sc('IP',f.ip)+sc('W',f.w,f.w>0?'go':'')+sc('L',f.l)+sc('SO',f.so,f.so>=5?'hi':'')+sc('BB',f.bb)+
+        '</div>'+
+        '<div class="srow" style="grid-template-columns:repeat(4,1fr)">'+
+          sc('H',f.h)+sc('R',f.r)+sc('HBP',f.hbp)+sc('WP',f.wp)+
+        '</div>'+
+      '</div>';
+    }
+  } else {
+    html='<div class="no-data">Noch keine Fielding-Stats.</div>';
+  }
+  document.getElementById('tab2').innerHTML=html;
+}
+
+function buildTabHighlights(p){
+  var html='';
+  if(p.youtube&&p.youtube.length>0){
+    p.youtube.forEach(function(v,idx){
+      var href='https://youtu.be/'+v.id+(v.start?'?t='+v.start:'');
+      var ts=v.start?Math.floor(v.start/60)+'m '+(v.start%60)+'s':'';
+      var thumb='https://img.youtube.com/vi/'+v.id+'/hqdefault.jpg';
+      var embedSrc='https://www.youtube.com/embed/'+v.id+'?start='+(v.start||0)+'&autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      var wrapId='yt'+p.num+'_'+idx;
+      html+='<div class="yt-card">'+
+        '<div class="yt-embed-wrap" id="'+wrapId+'">'+
+          '<div class="yt-thumb-wrap" onclick="playYT(\''+wrapId+'\',\''+embedSrc+'\')">'+
+            '<img src="'+thumb+'" alt="'+v.label+'" onerror="this.parentNode.style.background=\'#1a1a1a\';this.style.display=\'none\'">'+
+            '<div class="yt-play-btn"><div class="yt-play-circle">'+
+              '<svg width="20" height="20" fill="#0a0a0a" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>'+
+            '</div></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="yt-info">'+
+          '<div class="yt-label">'+(v.label||'Highlight')+'</div>'+
+          '<div class="yt-meta">'+(ts?'ab '+ts+' &nbsp;|&nbsp; ':'')+'<a href="'+href+'" target="_blank" rel="noopener" style="color:#f5a623;text-decoration:none">Auf YouTube &rarr;</a></div>'+
+        '</div>'+
+      '</div>';
+    });
+  } else {
+    html='<div class="yt-empty">Noch keine Highlights<br><small>Video-ID + Timestamp in den Daten eintragen</small></div>';
+  }
+  document.getElementById('tab3').innerHTML=html;
+}
+
+function holoMove(e,el){
+  var r=el.getBoundingClientRect();
+  var x=((e.clientX-r.left)/r.width*100).toFixed(1);
+  var y=((e.clientY-r.top)/r.height*100).toFixed(1);
+  el.style.setProperty('--hx',x+'%');
+  el.style.setProperty('--hy',y+'%');
+  el.style.setProperty('--ha',(x*3.6).toFixed(0)+'deg');
+}
+function holoReset(el){
+  el.style.setProperty('--hx','50%');
+  el.style.setProperty('--hy','50%');
+}
+
+function playYT(wrapId,src){
+  var el=document.getElementById(wrapId);
+  if(!el) return;
+  el.innerHTML='<iframe src="'+src+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+}
+
+// ── RENDER GRID ──
+function render(){
+  var q=document.getElementById('search').value.toLowerCase();
+  var sort=document.getElementById('sortBy').value;
+  var filter=document.getElementById('filterBy').value;
+  var list=PL.filter(function(p){
+    if(filter==='active'&&p.games===0) return false;
+    if(q&&p.name.toLowerCase().indexOf(q)<0&&String(p.num).indexOf(q)<0) return false;
+    return true;
+  });
+  list.sort(function(a,b){
+    if(sort==='num') return a.num-b.num;
+    return (b[sort]||0)-(a[sort]||0);
+  });
+  document.getElementById('count').textContent=list.length+' Spieler';
+  var g=document.getElementById('grid');
+  if(!list.length){g.innerHTML='<div class="empty-state">Keine Spieler gefunden</div>';}
+  else g.innerHTML=list.map(buildThumb).join('');
+  if(typeof renderGameLog==='function') renderGameLog();
+}
+
+// ── LEADERBOARDS ──
+function buildLeaderboard(cat,label,fn,fmt,minGames){
+  var elig=PL.filter(function(p){return p.games>=(minGames||1)&&fn(p)>0;});
+  elig.sort(function(a,b){return fn(b)-fn(a);});
+  var top=elig.slice(0,3);
+  var rows='';
+  if(!top.length){rows='<div class="lb-empty">Noch keine Daten</div>';}
+  else {
+    top.forEach(function(p,i){
+      rows+='<div class="lb-row" onclick="openModal('+p.num+')">'+
+        '<div class="lb-rank r'+(i+1)+'">'+(i+1)+'</div>'+
+        '<div class="lb-name"><span class="lb-num">#'+p.num+'</span> '+p.name+'</div>'+
+        '<div class="lb-val">'+fmt(fn(p))+'</div>'+
+      '</div>';
+    });
+  }
+  return '<div class="lb-card">'+
+    '<div class="lb-head"><div class="lb-icon">'+cat+'</div><div class="lb-cat">'+label+'</div></div>'+
+    rows+
+  '</div>';
+}
+function renderLeaderboards(){
+  var html='';
+  html+=buildLeaderboard('AVG','Batting Average',function(p){return p.avg;},function(v){return a3(v);},1);
+  html+=buildLeaderboard('OPS','On-base + Slugging',function(p){return p.ops;},function(v){return a3(v);},1);
+  html+=buildLeaderboard('RBI','Runs Batted In',function(p){return p.rbi;},function(v){return v;});
+  html+=buildLeaderboard('SB','Stolen Bases',function(p){return p.sb;},function(v){return v;});
+  html+=buildLeaderboard('HITS','Hits',function(p){return p.h;},function(v){return v;});
+  html+=buildLeaderboard('K','Strikeouts (Pitcher)',function(p){return p.fielding&&p.fielding.so?p.fielding.so:0;},function(v){return v;});
+  document.getElementById('leaderboards').innerHTML=html;
+}
+
+// ── GAME LOG ──
+function renderGameLog(){
+  var q=(document.getElementById('search')&&document.getElementById('search').value||'').toLowerCase().trim();
+  var sorted=GAMES.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(q){
+    sorted=sorted.filter(function(g){
+      var hay=(g.opponent+' '+(g.venue||'')+' '+(g.notes||'')+' '+g.date+' '+(g.liga||'')+' '+(g.spielnr||'')).toLowerCase();
+      if(hay.indexOf(q)>=0) return true;
+      // also match player number / name in lineup
+      if(g.lineup){
+        for(var i=0;i<g.lineup.length;i++){
+          var pl=null;for(var j=0;j<PL.length;j++){if(PL[j].num===g.lineup[i]){pl=PL[j];break;}}
+          if(pl&&(pl.name.toLowerCase().indexOf(q)>=0||String(pl.num).indexOf(q)>=0)) return true;
+        }
+      }
+      return false;
+    });
+  }
+  document.getElementById('gameCount').textContent=sorted.length+' Spiel'+(sorted.length===1?'':'e');
+  if(!sorted.length){document.getElementById('gameLog').innerHTML='<div class="empty-state" style="grid-column:1/-1">Keine Spiele für „'+q+'" gefunden</div>';return;}
+  var html=sorted.map(function(g){
+    var won=g.score_us>g.score_them;
+    var cls=won?'win':'loss';
+    var wl=won?'W':'L';
+    var d=new Date(g.date);
+    var dStr=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+    var venue=g.home?'Heim':'Auswärts';
+    var mvpHtml='';
+    if(g.mvp_num){
+      var mvp=null;
+      for(var i=0;i<PL.length;i++){if(PL[i].num===g.mvp_num){mvp=PL[i];break;}}
+      if(mvp) mvpHtml='<div class="gl-mvp" onclick="event.stopPropagation();openModal('+mvp.num+')">'+
+        '<span class="gl-mvp-tag">MVP</span>'+
+        '<span class="gl-mvp-name">#'+mvp.num+' '+mvp.name.split('(')[0].trim()+'</span></div>';
+    }
+    return '<div class="gl-card '+cls+'" onclick="openGameModal('+g.id+')">'+
+      '<div class="gl-meta"><span>'+dStr+' &middot; '+venue+'</span><span>'+(g.liga||'')+'</span></div>'+
+      '<div class="gl-result">'+
+        '<div class="gl-wl '+cls+'">'+wl+'</div>'+
+        '<div class="gl-score">'+g.score_us+' : '+g.score_them+'</div>'+
+      '</div>'+
+      '<div class="gl-vs">vs <strong>'+g.opponent+'</strong>'+(g.venue?' &middot; '+g.venue:'')+'</div>'+
+      mvpHtml+
+      '<div class="gl-stats">'+
+        '<div><b>'+g.hits_us+'</b> Hits</div>'+
+        '<div><b>'+g.errors_us+'</b> Errors</div>'+
+        '<div><b>'+g.hits_them+'</b> Gegner H</div>'+
+        '<div><b>'+g.errors_them+'</b> Gegner E</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('gameLog').innerHTML=html;
+}
+
+// ── GAME MODAL ──
+function openGameModal(id){
+  var g=null;
+  for(var i=0;i<GAMES.length;i++){if(GAMES[i].id===id){g=GAMES[i];break;}}
+  if(!g) return;
+  var won=g.score_us>g.score_them;
+  var d=new Date(g.date);
+  var dStr=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+  var venue=g.home?'Heim':'Auswärts';
+  function plBy(n){for(var i=0;i<PL.length;i++){if(PL[i].num===n)return PL[i];}return null;}
+  var pitchers=g.pitcher_nums?g.pitcher_nums.map(function(n){
+    var pl=plBy(n);
+    return pl?'<span class="gm-chip" onclick="event.stopPropagation();closeGameModal();setTimeout(function(){openModal('+pl.num+')},250)">#'+pl.num+' '+pl.name.split('(')[0].trim()+'</span>':'';
+  }).join(''):'';
+  var lineupHtml='';
+  if(g.lineup&&g.lineup.length){
+    lineupHtml=g.lineup.map(function(n){
+      var pl=plBy(n);if(!pl)return '';
+      var isMvp=g.mvp_num===n;
+      return '<span class="gm-chip'+(isMvp?' gm-chip-mvp':'')+'" onclick="event.stopPropagation();closeGameModal();setTimeout(function(){openModal('+pl.num+')},250)">'+
+        (isMvp?'<span class="gm-chip-tag">MVP</span>':'')+
+        '#'+pl.num+' '+pl.name.split('(')[0].trim()+'</span>';
+    }).join('');
+  } else {
+    lineupHtml='<div style="color:#475569;font-size:12px">Aufgebot nicht erfasst</div>';
+  }
+  var videoHtml='';
+  if(g.video_id){
+    var src='https://www.youtube.com/embed/'+g.video_id+'?rel=0&modestbranding=1&playsinline=1';
+    var thumb='https://img.youtube.com/vi/'+g.video_id+'/maxresdefault.jpg';
+    var wrapId='gv'+g.id;
+    var embedSrc='https://www.youtube.com/embed/'+g.video_id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    videoHtml='<div class="gm-section"><div class="gm-sec-title">Spielaufzeichnung</div>'+
+      '<div class="yt-card"><div class="yt-embed-wrap" id="'+wrapId+'">'+
+        '<div class="yt-thumb-wrap" onclick="playYT(\''+wrapId+'\',\''+embedSrc+'\')">'+
+          '<img src="'+thumb+'" alt="" onerror="this.src=\'https://img.youtube.com/vi/'+g.video_id+'/hqdefault.jpg\'">'+
+          '<div class="yt-play-btn"><div class="yt-play-circle">'+
+            '<svg width="22" height="22" fill="#0a0a0a" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>'+
+          '</div></div>'+
+        '</div>'+
+      '</div></div></div>';
+  } else {
+    videoHtml='<div class="gm-section"><div class="gm-sec-title">Spielaufzeichnung</div>'+
+      '<div class="gm-empty">Kein Video verfügbar</div></div>';
+  }
+  var html=
+    '<div class="gm-hero '+(won?'win':'loss')+'">'+
+      '<div class="gm-meta">'+dStr+' &middot; '+venue+(g.liga?' &middot; '+g.liga:'')+(g.spielnr?' &middot; #'+g.spielnr:'')+'</div>'+
+      '<div class="gm-result">'+
+        '<div class="gm-wl '+(won?'win':'loss')+'">'+(won?'WIN':'LOSS')+'</div>'+
+        '<div class="gm-score">'+g.score_us+' : '+g.score_them+'</div>'+
+      '</div>'+
+      '<div class="gm-vs">Flying Bats vs <strong>'+g.opponent+'</strong></div>'+
+      (g.notes?'<div class="gm-notes">'+g.notes+'</div>':'')+
+    '</div>'+
+    '<div class="gm-body">'+
+      '<div class="gm-stat-row">'+
+        '<div class="gm-stat"><div class="gm-stat-v">'+g.hits_us+'</div><div class="gm-stat-l">Hits</div></div>'+
+        '<div class="gm-stat"><div class="gm-stat-v">'+g.errors_us+'</div><div class="gm-stat-l">Errors</div></div>'+
+        '<div class="gm-stat"><div class="gm-stat-v">'+g.hits_them+'</div><div class="gm-stat-l">Gegner H</div></div>'+
+        '<div class="gm-stat"><div class="gm-stat-v">'+g.errors_them+'</div><div class="gm-stat-l">Gegner E</div></div>'+
+      '</div>'+
+      (pitchers?'<div class="gm-section"><div class="gm-sec-title">Pitcher</div><div class="gm-chips">'+pitchers+'</div></div>':'')+
+      '<div class="gm-section"><div class="gm-sec-title">Aufgebot ('+(g.lineup?g.lineup.length:0)+' Spieler)</div><div class="gm-chips">'+lineupHtml+'</div></div>'+
+      videoHtml+
+    '</div>';
+  document.getElementById('gameModalBody').innerHTML=html;
+  document.getElementById('gameOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeGameModal(){
+  document.getElementById('gameOverlay').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('gameModalBody').innerHTML='';
+}
+function gameOverlayClick(e){if(e.target===document.getElementById('gameOverlay')) closeGameModal();}
+
+// ── LEAGUE TABLE ──
+function renderLeague(){
+  document.getElementById('leagueMeta').textContent=LEAGUE.name+' '+LEAGUE.season;
+  document.getElementById('lgSource').href=LEAGUE.source_url;
+  // Standings
+  var fmt=function(v){return v>0?'.'+String(Math.round(v*1000)).padStart(3,'0'):'.000';};
+  var rows='<thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>Streak</th></tr></thead><tbody>';
+  LEAGUE.standings.forEach(function(t){
+    var us=t.team===OUR_TEAM;
+    var streakCls=t.streak.indexOf('W')===0?'st-w':(t.streak.indexOf('L')===0?'st-l':'');
+    rows+='<tr'+(us?' class="us"':'')+'>'+
+      '<td class="lg-pos">'+t.pos+'</td>'+
+      '<td class="lg-team">'+t.team.replace(' e.V.','')+(us?' <span class="lg-us-tag">WIR</span>':'')+'</td>'+
+      '<td>'+t.w+'</td><td>'+t.l+'</td>'+
+      '<td class="lg-pct">'+fmt(t.pct)+'</td>'+
+      '<td class="'+streakCls+'">'+t.streak+'</td>'+
+    '</tr>';
+  });
+  rows+='</tbody>';
+  document.getElementById('leagueTable').innerHTML=rows;
+  // Upcoming Bats games (next 3)
+  var today=new Date().toISOString().slice(0,10);
+  var upcoming=LEAGUE.schedule.filter(function(g){
+    return g.date>=today && (g.home===OUR_TEAM||g.away===OUR_TEAM);
+  }).slice(0,3);
+  if(upcoming.length){
+    var html='<div class="lg-upcoming-title">Nächste Spiele</div>';
+    upcoming.forEach(function(g){
+      var d=new Date(g.date);
+      var dStr=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.';
+      var weekday=['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()];
+      var isHome=g.home===OUR_TEAM;
+      var opp=(isHome?g.away:g.home).replace(' e.V.','');
+      html+='<div class="lg-up-card">'+
+        '<div class="lg-up-date"><div class="lg-up-day">'+weekday+'</div><div class="lg-up-num">'+dStr+'</div><div class="lg-up-time">'+g.time+'</div></div>'+
+        '<div class="lg-up-info"><div class="lg-up-vs">'+(isHome?'vs':'@')+' <strong>'+opp+'</strong></div>'+
+          '<div class="lg-up-loc">'+(isHome?'Heim':'Auswärts')+'</div></div>'+
+      '</div>';
+    });
+    document.getElementById('leagueUpcoming').innerHTML=html;
+  } else {
+    document.getElementById('leagueUpcoming').innerHTML='<div class="lg-upcoming-title">Keine weiteren Spiele</div>';
+  }
+}
+
+renderLeaderboards();
+renderLeague();
+renderGameLog();
+render();
+
+// auto-scroll to grid when searching on mobile
+document.getElementById('search').addEventListener('focus',function(){
+  if(window.innerWidth<=768){
+    setTimeout(function(){document.querySelector('.controls').scrollIntoView({behavior:'smooth',block:'start'});},150);
+  }
+});
+
+// Section nav: smooth scroll + active state
+document.querySelectorAll('.snav a').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    var t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+if('IntersectionObserver' in window){
+  var navLinks={};
+  document.querySelectorAll('.snav a').forEach(function(a){navLinks[a.getAttribute('href').slice(1)]=a;});
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        Object.values(navLinks).forEach(function(l){l.classList.remove('active');});
+        var ln=navLinks[en.target.id];
+        if(ln) ln.classList.add('active');
+      }
+    });
+  },{rootMargin:'-50px 0px -60% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){io.observe(s);});
+}
+
+</script>
+</body>
+</html>
