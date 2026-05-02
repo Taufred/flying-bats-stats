@@ -1541,12 +1541,16 @@ function showTeam(name){
 // Softball thumbnail (no stats — just photo, num, name)
 function buildSoftballThumb(p){
   var n=p.num;
-  var imgHtml='<img src="'+p.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block" onerror="this.style.display=\'none\'">';
+  var hasPhoto = !!p.photo;
+  var imgHtml = hasPhoto
+    ? '<img src="'+p.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block" onerror="this.style.display=\'none\'">'
+    : '';
+  var displayNum = p.placeholder_num ? '#?' : ('#'+n);
   return '<div class="pc sb-thumb" onclick="openModal('+n+',event,\'softball\')">'+
     '<div class="pc-bg">'+imgHtml+'</div>'+
     '<div class="pc-ini">'+ini(p.name)+'</div>'+
     '<div class="pc-grad"></div>'+
-    '<div class="pc-num">#'+n+'</div>'+
+    '<div class="pc-num">'+displayNum+'</div>'+
     '<div class="pc-bottom">'+
       '<div class="pc-name">'+p.name+'</div>'+
       '<div class="pc-badges"><span class="status-badge sb-badge">🥎 SOFTBALL</span></div>'+
@@ -1585,10 +1589,16 @@ function openModal(num,evt,team){
   if(na) na.style.display=team==='softball'?'none':'';
 
   // Populate persistent card frame
-  var photoSrc=p.photo||(p.num+'.jpg');
+  var hasPhotoForModal = team==='softball' ? !!p.photo : true;
+  var photoSrc = team==='softball' ? p.photo : (p.photo||(p.num+'.jpg'));
   var photoEl=document.getElementById('tcPhoto');
   photoEl.classList.remove('no-img');
-  photoEl.innerHTML='<img src="'+photoSrc+'" alt="" onerror="this.parentNode.classList.add(\'no-img\');this.remove()">';
+  if(hasPhotoForModal){
+    photoEl.innerHTML='<img src="'+photoSrc+'" alt="" onerror="this.parentNode.classList.add(\'no-img\');this.remove()">';
+  } else {
+    photoEl.classList.add('no-img');
+    photoEl.innerHTML='';
+  }
   document.getElementById('tcIni').textContent=ini(p.name);
   document.getElementById('tcNum').textContent='#'+p.num;
   document.getElementById('tcName').textContent=p.name;
@@ -2450,13 +2460,16 @@ var NO_PHOTO_NUMS = [14, 16, 32, 44, 72, 85, 87];
 
 // Softball roster (separate pool — no stats, but in pack/collection)
 var SOFTBALL_PL = [
-  {num:1,  name:'VEYRA PETZINNA',  photo:'sb_1.jpg'},
-  {num:2,  name:'MAJA JAKOV',      photo:'sb_2.jpg'},
-  {num:8,  name:'PHILIPP BAHR',    photo:'sb_8.jpg'},
-  {num:25, name:'JULIANE FÖTISCH', photo:'sb_25.jpg'},
-  {num:42, name:'TAMARA ECKERT',   photo:'sb_42.jpg'},
-  {num:81, name:'JONAH GOLITZ',    photo:'sb_81.jpg'},
-  {num:99, name:'ELKE BORGMANN',   photo:'sb_99.jpg'}
+  {num:1,   name:'VEYRA PETZINNA',  photo:'sb_1.jpg'},
+  {num:2,   name:'MAJA JAKOV',      photo:'sb_2.jpg'},
+  {num:8,   name:'PHILIPP BAHR',    photo:'sb_8.jpg'},
+  {num:25,  name:'JULIANE FÖTISCH', photo:'sb_25.jpg'},
+  {num:42,  name:'TAMARA BAHR',     photo:'sb_42.jpg'},
+  {num:81,  name:'JONAH GOLITZ',    photo:'sb_81.jpg'},
+  {num:90,  name:'JULIA ZILLMANN',  photo:'sb_90.jpg'},
+  {num:99,  name:'ELKE BORGMANN',   photo:'sb_99.jpg'},
+  {num:100, name:'MIKE ANDERSON PINEDA VELASQUEZ', photo:'', placeholder_num:true},
+  {num:101, name:'CARSTEN MATBURGER',              photo:'', placeholder_num:true}
 ];
 
 // ── SET 2 RELEASE FLAG ──
@@ -2532,15 +2545,18 @@ function findCardPlayer(card){
 }
 
 function rollPlayerCard(variant){
-  // Pool aus Set 1 (BB+SB) + Set 2 Action-Karten. Foil-Pool ohne photoless BB.
+  // Pool aus Set 1 (BB+SB) + Set 2 Action-Karten. Foil-Pool nur Spieler mit Foto.
   var pool=[];
   // Set 1 BB (Foil-Pool: nur mit Foto)
   PL.forEach(function(p){
     if(variant==='foil' && NO_PHOTO_NUMS.indexOf(p.num)>=0) return;
     pool.push({num:p.num, team:'baseball', set:1});
   });
-  // Set 1 SB
-  SOFTBALL_PL.forEach(function(p){ pool.push({num:p.num, team:'softball', set:1}); });
+  // Set 1 SB (Foil-Pool: nur mit Foto)
+  SOFTBALL_PL.forEach(function(p){
+    if(variant==='foil' && !p.photo) return;
+    pool.push({num:p.num, team:'softball', set:1});
+  });
   // Set 2 Action-Variants (immer mit Foto, daher beide Variants OK)
   if(SET2_RELEASED){
     SET2_ACTIONS.forEach(function(a){ pool.push({num:a.num, team:a.team||'baseball', set:2}); });
