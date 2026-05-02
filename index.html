@@ -125,6 +125,7 @@ select option{background:#1e293b}
 
 .status-badge{font-size:9px;font-weight:600;letter-spacing:1px;padding:2px 7px;border-radius:10px}
 .badge-active{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.35)}
+.sb-badge{background:rgba(255,215,0,.15);color:#ffd700;border:1px solid rgba(255,215,0,.35);letter-spacing:1.5px}
 .badge-il{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.35)}
 .badge-inactive{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.25)}
 
@@ -300,6 +301,21 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
   opacity:0;animation:hint-fade 3s ease-out 1}
 .modal.tc.show-hint .tc-swipe-hint{animation:hint-fade 3.5s ease-out 1}
 @keyframes hint-fade{0%{opacity:0}15%{opacity:1}70%{opacity:1}100%{opacity:0}}
+
+/* ── SB-MODE (Softball player modal — photo only, no tabs) ── */
+.modal.tc.sb-mode .modal-tabs,
+.modal.tc.sb-mode .modal-body,
+.modal.tc.sb-mode .tc-foil,
+.modal.tc.sb-mode .tc-sparkles,
+.modal.tc.sb-mode .tc-swipe-hint,
+.modal.tc.sb-mode .tool-compare{display:none}
+.modal.tc.sb-mode .tc-photo,
+.modal.tc.sb-mode .tc-ini,
+.modal.tc.sb-mode .tc-grad{height:100%}
+.modal.tc.sb-mode .tc-grad{background:linear-gradient(to bottom,rgba(10,10,10,.05) 30%,rgba(10,10,10,.4) 65%,rgba(10,10,10,.92) 90%,#0a0a0a 100%)}
+.modal.tc.sb-mode .tc-header{top:auto;bottom:30px;padding:0 24px}
+.modal.tc.sb-mode .tc-name{font-size:30px}
+.modal.tc.sb-mode{border-color:rgba(255,215,0,.4);box-shadow:0 32px 80px rgba(0,0,0,.85),0 0 32px rgba(255,215,0,.18)}
 
 /* ── TIER 1 (1-2 MVPs): Gold + holo ── */
 .modal.tc.tier-1{border-color:rgba(245,166,35,.55);box-shadow:0 32px 80px rgba(0,0,0,.85),0 0 0 1px rgba(255,215,0,.2),0 0 32px rgba(255,215,0,.18)}
@@ -900,6 +916,14 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
 .gm-empty{font-size:12px;color:#475569;padding:14px;text-align:center;
   background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);border-radius:10px}
 
+/* ── GLOBAL TEAM TOGGLE (Baseball / Softball) ── */
+.team-toggle-wrap{display:flex;gap:8px;justify-content:center;padding:14px 20px 6px;flex-wrap:wrap;max-width:1600px;margin:0 auto}
+.team-toggle-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;
+  padding:10px 24px;border-radius:24px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:.2s;font-weight:600;white-space:nowrap}
+.team-toggle-btn:hover{color:#cbd5e1;border-color:rgba(255,215,0,.3)}
+.team-toggle-btn.active{background:linear-gradient(135deg,rgba(245,166,35,.25),rgba(255,215,0,.12));color:#ffd700;border-color:rgba(255,215,0,.6);box-shadow:0 4px 14px rgba(255,215,0,.15)}
+
 /* ── LIGA TOGGLE TABS ── */
 .liga-toggle{display:flex;gap:6px;justify-content:center;padding:0 20px 12px;flex-wrap:wrap;max-width:1600px;margin:0 auto}
 .liga-tab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;
@@ -988,11 +1012,16 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
 
 <nav class="snav"><div class="snav-inner">
   <a href="#sec-players" class="active">Spieler</a>
-  <a href="#sec-leaderboards">Leaderboards</a>
+  <a href="#sec-leaderboards" data-bb-only>Leaderboards</a>
   <a href="#sec-league">Liga</a>
-  <a href="#sec-games">Spiele</a>
+  <a href="#sec-games" data-bb-only>Spiele</a>
   <a href="#sec-pack" class="snav-pack">🎴 Pack</a>
 </div></nav>
+
+<div class="team-toggle-wrap">
+  <button class="team-toggle-btn active" data-team="bb" onclick="showTeam('bb')">⚾ Baseball</button>
+  <button class="team-toggle-btn" data-team="sb" onclick="showTeam('sb')">🥎 Mixed Softball</button>
+</div>
 
 <div class="controls">
   <div class="search-wrap">
@@ -1029,10 +1058,6 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
 
 <section id="sec-league">
   <div class="section"><div class="section-title">Liga <span id="leagueMeta"></span></div></div>
-  <div class="liga-toggle">
-    <button class="liga-tab active" onclick="showLiga('bb')" data-liga="bb">⚾ Bezirksliga</button>
-    <button class="liga-tab" onclick="showLiga('sb')" data-liga="sb">🥎 BBQ-Liga (Softball)</button>
-  </div>
   <div class="lg-wrap">
     <div class="lg-table-wrap">
       <table class="lg-table" id="leagueTable"></table>
@@ -1153,8 +1178,8 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
   <div class="modal-stage" id="modalStage">
     <div class="modal tc" id="modal" onmousemove="holoMove(event,this)" onmouseleave="holoReset(this)">
       <div class="modal-toolbar">
-        <button class="modal-tool" onclick="openCompareWith(currentPlayer)" title="Vergleichen" aria-label="Vergleichen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8 4v16M16 4v16M3 8l5-4 5 4M11 16l5 4 5-4"/></svg></button>
-        <button class="modal-tool" onclick="shareCardAsImage()" title="Als Bild teilen" aria-label="Teilen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v12"/></svg></button>
+        <button class="modal-tool tool-compare" onclick="openCompareWith(currentPlayer)" title="Vergleichen" aria-label="Vergleichen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8 4v16M16 4v16M3 8l5-4 5 4M11 16l5 4 5-4"/></svg></button>
+        <button class="modal-tool tool-share" onclick="shareCardAsImage()" title="Als Bild teilen" aria-label="Teilen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v12"/></svg></button>
         <button class="modal-close" onclick="closeModal()" title="Schließen">&#x2715;</button>
       </div>
       <!-- Always-visible card top -->
@@ -1222,7 +1247,7 @@ var LEAGUES = {
     ]
   },
   sb: {
-    name: "BBQ-Liga Softball", icon:"🥎", season: 2026, our_team: OUR_TEAM_SB,
+    name: "Mixed Softball Liga", icon:"🥎", season: 2026, our_team: OUR_TEAM_SB,
     source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6258&bsm_season=2026",
     standings: [
       {pos:1, team:"Untouchables Paderborn",                w:2, l:0, pct:1.000, streak:"W2"},
@@ -1368,6 +1393,47 @@ var currentPlayer=null;
 
 // Currently-filtered list (matches what's in grid) — populated by render()
 var visibleList=[];
+var currentTeam='bb'; // 'bb' = Baseball, 'sb' = Softball
+
+function showTeam(name){
+  if(currentTeam===name) return;
+  currentTeam=name;
+  currentLiga=name; // unify with league section
+  // Toggle button states
+  document.querySelectorAll('.team-toggle-btn').forEach(function(t){t.classList.toggle('active',t.dataset.team===name);});
+  // Hide leaderboards & games sections in SB mode (no stats)
+  var hideBBOnly=name==='sb';
+  var lbSec=document.getElementById('sec-leaderboards');
+  var gmSec=document.getElementById('sec-games');
+  if(lbSec) lbSec.style.display=hideBBOnly?'none':'';
+  if(gmSec) gmSec.style.display=hideBBOnly?'none':'';
+  // Hide their nav links
+  document.querySelectorAll('.snav a[data-bb-only]').forEach(function(a){a.style.display=hideBBOnly?'none':'';});
+  // Hide BB-only controls (sort/filter) when in SB mode
+  var sortSel=document.getElementById('sortBy');
+  var filterSel=document.getElementById('filterBy');
+  if(sortSel) sortSel.style.display=hideBBOnly?'none':'';
+  if(filterSel) filterSel.style.display=hideBBOnly?'none':'';
+  // Re-render
+  render();
+  if(typeof renderLeague==='function') renderLeague();
+}
+
+// Softball thumbnail (no stats — just photo, num, name)
+function buildSoftballThumb(p){
+  var n=p.num;
+  var imgHtml='<img src="'+p.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block" onerror="this.style.display=\'none\'">';
+  return '<div class="pc sb-thumb" onclick="openModal('+n+',event,\'softball\')">'+
+    '<div class="pc-bg">'+imgHtml+'</div>'+
+    '<div class="pc-ini">'+ini(p.name)+'</div>'+
+    '<div class="pc-grad"></div>'+
+    '<div class="pc-num">#'+n+'</div>'+
+    '<div class="pc-bottom">'+
+      '<div class="pc-name">'+p.name+'</div>'+
+      '<div class="pc-badges"><span class="status-badge sb-badge">🥎 SOFTBALL</span></div>'+
+    '</div>'+
+  '</div>';
+}
 
 function applyTierToModal(p){
   var modal=document.getElementById('modal');
@@ -1383,26 +1449,45 @@ function applyTierToModal(p){
   cw.innerHTML=tier>=3?'<div class="tc-crown">&#x1F451;</div>':'';
 }
 
-function openModal(num,evt){
+function openModal(num,evt,team){
+  team=team||'baseball';
+  var pool=(team==='softball')?SOFTBALL_PL:PL;
   var p=null;
-  for(var i=0;i<PL.length;i++){if(PL[i].num===num){p=PL[i];break;}}
+  for(var i=0;i<pool.length;i++){if(pool[i].num===num){p=pool[i];break;}}
   if(!p) return;
   currentPlayer=p;
+  currentPlayer._team=team;
+
+  var modal=document.getElementById('modal');
+  modal.classList.toggle('sb-mode',team==='softball');
+  // Hide nav arrows in SB mode (no tabs to flip)
+  var pa=document.getElementById('navPrev'), na=document.getElementById('navNext');
+  if(pa) pa.style.display=team==='softball'?'none':'';
+  if(na) na.style.display=team==='softball'?'none':'';
 
   // Populate persistent card frame
+  var photoSrc=p.photo||(p.num+'.jpg');
   var photoEl=document.getElementById('tcPhoto');
-  photoEl.innerHTML='<img src="'+p.num+'.jpg" alt="" onerror="this.style.display=\'none\'">';
+  photoEl.classList.remove('no-img');
+  photoEl.innerHTML='<img src="'+photoSrc+'" alt="" onerror="this.parentNode.classList.add(\'no-img\');this.remove()">';
   document.getElementById('tcIni').textContent=ini(p.name);
   document.getElementById('tcNum').textContent='#'+p.num;
   document.getElementById('tcName').textContent=p.name;
-  document.getElementById('tcBadges').innerHTML=bdg(p);
-  applyTierToModal(p);
 
-  buildTabStats(p);
-  buildTabOffense(p);
-  buildTabDefense(p);
-  buildTabHighlights(p);
-  showTab(0);
+  if(team==='softball'){
+    document.getElementById('tcBadges').innerHTML='<span class="status-badge sb-badge">🥎 MIXED SOFTBALL</span>';
+    document.getElementById('tcMvpWrap').innerHTML='';
+    document.getElementById('tcCrownWrap').innerHTML='';
+    modal.classList.remove('tier-1','tier-2','tier-3');
+  } else {
+    document.getElementById('tcBadges').innerHTML=bdg(p);
+    applyTierToModal(p);
+    buildTabStats(p);
+    buildTabOffense(p);
+    buildTabDefense(p);
+    buildTabHighlights(p);
+    showTab(0);
+  }
 
   // Show swipe hint on first open (per session)
   if(!window._swipeHintShown){
@@ -1443,6 +1528,7 @@ var flipping=false;
 function flipTab(dir){
   // For arrow-button / keyboard triggers: do the full flip animation from 0
   if(flipping) return;
+  if(document.getElementById('modal').classList.contains('sb-mode')) return; // no tabs in SB mode
   completeFlip(dir);
 }
 function navPlayer(dir){ flipTab(dir); }
@@ -1519,12 +1605,14 @@ function drawShareCard(canvas,p){
   return new Promise(function(resolve){
     var ctx=canvas.getContext('2d');
     var W=canvas.width, H=canvas.height;
-    var c=mvpCount(p.num), tier=mvpTier(c);
-    var photoH=Math.round(H*0.6);
-    var borderCol={0:'#f5a623',1:'#ffd700',2:'#ec4899',3:'#ffd700'}[tier];
-    var borderW={0:4,1:5,2:6,3:7}[tier];
+    var isSB=p._team==='softball';
+    var c=isSB?0:mvpCount(p.num), tier=mvpTier(c);
+    var photoH=Math.round(H*(isSB?0.72:0.6));
+    var borderCol=isSB?'#ffd700':({0:'#f5a623',1:'#ffd700',2:'#ec4899',3:'#ffd700'}[tier]);
+    var borderW=isSB?5:({0:4,1:5,2:6,3:7}[tier]);
+    var photoPath=p.photo||(p.num+'.jpg');
     ctx.fillStyle='#0a0a0a';_roundRect(ctx,0,0,W,H,24);ctx.fill();
-    Promise.all([_loadImg(p.num+'.jpg'),_loadImg('logo.png')]).then(function(imgs){
+    Promise.all([_loadImg(photoPath),_loadImg('logo.png')]).then(function(imgs){
       var photo=imgs[0],logo=imgs[1];
       ctx.save();_roundRect(ctx,0,0,W,photoH,[24,24,0,0]);ctx.clip();
       if(photo){
@@ -1559,7 +1647,12 @@ function drawShareCard(canvas,p){
       ctx.font='bold 38px Oswald,sans-serif';ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=14;
       ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='top';
       ctx.fillText(p.name,30,photoH+8);ctx.shadowBlur=0;
-      if(p.games>0){
+      if(isSB){
+        // SB: simple "Mixed Softball" badge instead of stats
+        ctx.font='bold 16px Oswald,sans-serif';ctx.fillStyle='#ffd700';
+        ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.fillText('🥎  MIXED SOFTBALL  ·  SAISON 2026',W/2,photoH+62);
+      } else if(p.games>0){
         var stats=[{l:'AVG',v:a3(p.avg)},{l:'HITS',v:p.h},{l:'RBI',v:p.rbi},{l:'OPS',v:p.ops>0?a3(p.ops):'-'}];
         var pad=30,gap=12,statW=(W-pad*2-gap*3)/4,statH=88,statY=photoH+74;
         stats.forEach(function(s,i){
@@ -1740,6 +1833,7 @@ var dragJustEnded=false;
   function onStart(e){
     if(!document.getElementById('overlay').classList.contains('open')) return;
     if(flipping) return;
+    if(document.getElementById('modal').classList.contains('sb-mode')) return;
     var t=e.touches?e.touches[0]:e;
     var tgt=e.target;
     // Don't start drag on interactive elements (clicks must work normally)
@@ -1963,6 +2057,21 @@ function playYT(wrapId,src){
 // ── RENDER GRID ──
 function render(){
   var q=document.getElementById('search').value.toLowerCase();
+  var g=document.getElementById('grid');
+  if(currentTeam==='sb'){
+    // Softball: no stats, no filter/sort logic, just photo+num+name
+    var sbList=SOFTBALL_PL.filter(function(p){
+      if(q&&p.name.toLowerCase().indexOf(q)<0&&String(p.num).indexOf(q)<0) return false;
+      return true;
+    });
+    sbList.sort(function(a,b){return a.num-b.num;});
+    document.getElementById('count').textContent=sbList.length+' Softballer';
+    visibleList=sbList.slice();
+    if(!sbList.length) g.innerHTML='<div class="empty-state">Keine Spielerinnen gefunden</div>';
+    else g.innerHTML=sbList.map(buildSoftballThumb).join('');
+    if(typeof renderGameLog==='function') renderGameLog();
+    return;
+  }
   var sort=document.getElementById('sortBy').value;
   var filter=document.getElementById('filterBy').value;
   var list=PL.filter(function(p){
@@ -1976,7 +2085,6 @@ function render(){
   });
   document.getElementById('count').textContent=list.length+' Spieler';
   visibleList=list.slice();
-  var g=document.getElementById('grid');
   if(!list.length){g.innerHTML='<div class="empty-state">Keine Spieler gefunden</div>';}
   else g.innerHTML=list.map(buildThumb).join('');
   if(typeof renderGameLog==='function') renderGameLog();
@@ -2163,12 +2271,6 @@ function closeGameModal(){
 function gameOverlayClick(e){if(e.target===document.getElementById('gameOverlay')) closeGameModal();}
 
 // ── LEAGUE TABLE ──
-function showLiga(name){
-  if(!LEAGUES[name]) return;
-  currentLiga=name;
-  document.querySelectorAll('.liga-tab').forEach(function(t){t.classList.toggle('active',t.dataset.liga===name);});
-  renderLeague();
-}
 function renderLeague(){
   var L=LEAGUES[currentLiga]||LEAGUES.bb;
   var us=L.our_team;
@@ -2243,7 +2345,7 @@ var CARD_SPECIALS = [
   {id:'fireball_tim', baseNum:2, name:'FIREBALL ELFRINK', subtitle:'HOMERUN PACK', cls:'special fire'},
   {id:'stealing_serhan', baseNum:43, name:'SERHAN SAHAN', subtitle:'STEAL KING · IN MOTION', cls:'special stealing', photo:'stealing_serhan.jpg'},
   {id:'ukraine_danylo', baseNum:76, name:'DANYLO CHERKASHENKO', subtitle:'HEART OF UKRAINE 💙💛', cls:'special ukraine', photo:'ukraine_danylo.jpg'},
-  {id:'bbq_champs_2025', baseNum:null, name:'BBQ-CHAMPS 2025', subtitle:'TEAM CHAMPIONSHIP 🏆', cls:'special champs', photo:'bbq_champs_2025.jpg'}
+  {id:'bbq_champs_2025', baseNum:null, name:'MIXED CHAMPS 2025', subtitle:'TEAM CHAMPIONSHIP 🏆', cls:'special champs', photo:'bbq_champs_2025.jpg'}
 ];
 
 // Drop weights
