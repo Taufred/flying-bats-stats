@@ -455,6 +455,10 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 .yt-card:hover{border-color:rgba(245,166,35,.35);transform:scale(1.01)}
 .yt-embed-wrap{position:relative;padding-top:56.25%;background:#000;overflow:hidden}
 .yt-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+/* Vertical short (9:16) — limit width and use portrait aspect */
+.yt-card.yt-short{max-width:280px;margin:0 auto;border-radius:14px}
+.yt-embed-wrap.yt-short{padding-top:177.78%}
+.yt-card.yt-short .yt-thumb-wrap img{object-fit:cover}
 .yt-thumb-wrap{position:absolute;inset:0;cursor:pointer;background:#000}
 .yt-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
 .yt-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -513,18 +517,20 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
   background:#0a0a0a;border:2px solid rgba(245,166,35,.25);box-shadow:0 8px 24px rgba(0,0,0,.6);
   transform-style:preserve-3d}
 .tc-mini.locked{border-color:rgba(255,255,255,.06);background:linear-gradient(160deg,#0d0d0d,#1a1a1a)}
-.tc-mini-photo{position:absolute;top:0;left:0;right:0;height:65%;overflow:hidden;background:linear-gradient(160deg,#1a1a1a,#262626);z-index:1}
+.tc-mini-photo{position:absolute;top:0;left:0;right:0;height:72%;overflow:hidden;background:linear-gradient(160deg,#1a1a1a,#262626);z-index:1}
 .tc-mini-photo img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 /* Placeholder for players without photo */
 .tc-mini-photo.no-photo{display:flex;align-items:center;justify-content:center;
   background:linear-gradient(160deg,#1a1a1a 0%,#262626 50%,#1a1a1a 100%)}
+/* Viele Set-1-Promo-Fotos haben Namen/Wasserzeichen im unteren Bildbereich. Mit dem größeren Foto (72%) würde das doppelt erscheinen — Zoom & top-Anchor croppt es raus. Set-2-Fotos sind clean → bleiben unangetastet. */
+.tc-mini:not(.set2):not(.special) .tc-mini-photo img{transform:scale(1.18);transform-origin:top center}
 .tc-mini-photo.no-photo .ph-bg{position:absolute;inset:0;
   background:url(logo.png) center 35%/45% no-repeat;opacity:.12;filter:grayscale(.4)}
 .tc-mini-photo.no-photo .ph-num{position:relative;font-family:'Oswald',sans-serif;
   font-size:64px;font-weight:700;color:rgba(255,215,0,.55);letter-spacing:-2px;line-height:1;
   text-shadow:0 2px 12px rgba(0,0,0,.6)}
-.tc-mini-grad{position:absolute;top:0;left:0;right:0;height:65%;z-index:2;
-  background:linear-gradient(to bottom,rgba(10,10,10,0) 50%,rgba(10,10,10,.95) 100%)}
+.tc-mini-grad{position:absolute;top:0;left:0;right:0;height:72%;z-index:2;
+  background:linear-gradient(to bottom,rgba(10,10,10,0) 62%,rgba(10,10,10,.85) 92%,#0a0a0a 100%)}
 .tc-mini-num{position:absolute;top:8px;left:10px;font-family:'Oswald',sans-serif;font-size:36px;font-weight:700;color:rgba(255,255,255,.18);line-height:.85;z-index:3}
 .tc-mini-info{position:absolute;left:10px;right:10px;bottom:8px;z-index:3}
 .tc-mini-name{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;line-height:1.15;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 8px rgba(0,0,0,.6)}
@@ -544,7 +550,7 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 
 /* Specials — photo fills more of the card to avoid empty black space */
 .tc-mini.special .tc-mini-photo{height:82%}
-.tc-mini.special .tc-mini-grad{height:82%;background:linear-gradient(to bottom,rgba(10,10,10,0) 60%,rgba(10,10,10,.95) 95%,#0a0a0a 100%)}
+.tc-mini.special .tc-mini-grad{height:82%;background:linear-gradient(to bottom,rgba(10,10,10,0) 65%,rgba(10,10,10,.85) 93%,#0a0a0a 100%)}
 .tc-mini.special .tc-mini-info{bottom:8px}
 .tc-mini.special .tc-mini-name{font-size:13px;line-height:1.1}
 .tc-mini.special .tc-mini-sub{margin-top:3px;font-size:9px}
@@ -588,6 +594,42 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 .tc-mini.special.ukraine .tc-mini-stats{display:none}
 .tc-mini.special.ukraine .tc-mini-sub{color:#fde047;font-weight:700;letter-spacing:1.2px}
 
+/* Legend — Half-Century / Lifetime achievement (deep royal gold) */
+.tc-mini.special.legend{border-color:transparent;
+  background:linear-gradient(160deg,#3b0764,#0a0a0a 45%) padding-box,
+  linear-gradient(135deg,#fcd34d 0%,#a16207 25%,#fcd34d 50%,#7c2d12 75%,#fcd34d 100%) border-box;
+  border:3px solid transparent;
+  box-shadow:0 8px 28px rgba(124,45,18,.5),0 0 36px rgba(252,211,77,.35),inset 0 0 0 1px rgba(252,211,77,.4)}
+.tc-mini.special.legend .tc-mini-photo::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,rgba(252,211,77,.22),transparent 65%),
+    linear-gradient(180deg,transparent 70%,rgba(124,45,18,.35) 100%);pointer-events:none}
+.tc-mini.special.legend::after{content:'★ LEGEND';position:absolute;top:6px;right:-30px;
+  background:linear-gradient(135deg,#fcd34d,#a16207,#fcd34d);background-size:200% 100%;
+  animation:legend-shine 3s ease infinite;
+  color:#0a0a0a;font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.tc-mini.special.legend .tc-mini-stats{display:none}
+.tc-mini.special.legend .tc-mini-name{font-family:'Oswald',sans-serif;letter-spacing:2px;
+  background:linear-gradient(135deg,#fcd34d,#fff,#fcd34d);background-size:200% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:legend-shine 3s ease infinite}
+.tc-mini.special.legend .tc-mini-sub{color:#fcd34d;font-weight:700;letter-spacing:1.5px}
+.tc-mini.special.legend .tc-mini-icon{filter:drop-shadow(0 2px 8px rgba(252,211,77,.7))}
+
+/* Lore — vintage portrait / off-duty (desaturiert, sepia, gedeckte Stahl-Border) */
+.tc-mini.special.lore{border-color:transparent;
+  background:linear-gradient(160deg,#1c1917,#0a0a0a 45%) padding-box,
+  linear-gradient(135deg,#a8a29e,#44403c,#a8a29e) border-box;
+  border:2px solid transparent;
+  box-shadow:0 8px 24px rgba(0,0,0,.55),inset 0 0 0 1px rgba(168,162,158,.2)}
+.tc-mini.special.lore .tc-mini-photo{filter:saturate(.7) sepia(.25) contrast(1.05)}
+.tc-mini.special.lore::after{content:'📖 LORE';position:absolute;top:6px;right:-30px;
+  background:linear-gradient(135deg,#a8a29e,#57534e);color:#fff;
+  font-family:'Oswald',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:3px 36px;transform:rotate(45deg);z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tc-mini.special.lore .tc-mini-stats{display:none}
+.tc-mini.special.lore .tc-mini-sub{color:#a8a29e;font-weight:600;letter-spacing:1.2px}
+
 /* Champs — Team / Event Card (golden trophy theme) */
 .tc-mini.special.champs{border-color:transparent;
   background:linear-gradient(160deg,#7c2d12,#0a0a0a 50%) padding-box,
@@ -624,6 +666,65 @@ body.tc-dragging,body.tc-dragging *{user-select:none!important}
 .pack-reveal .tc-mini:nth-child(2){animation-delay:.4s}
 .pack-reveal .tc-mini:nth-child(3){animation-delay:.7s}
 @keyframes reveal-card{0%{transform:scale(.3) rotateY(180deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotateY(0);opacity:1}}
+
+/* Set-Filter — über Sammlungs-Tabs */
+.set-filter{display:flex;gap:6px;justify-content:center;padding:0 20px 8px;flex-wrap:wrap}
+.set-filter-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;
+  padding:6px 14px;border-radius:18px;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;transition:.15s;font-weight:600}
+.set-filter-btn:hover{color:#cbd5e1;border-color:rgba(255,215,0,.25)}
+.set-filter-btn.active{background:linear-gradient(135deg,rgba(217,119,6,.25),rgba(252,211,77,.12));color:#fcd34d;border-color:rgba(252,211,77,.55)}
+
+/* Set 2 Welcome-Popup */
+.set2-welcome{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;padding:30px}
+.set2-welcome.open{display:flex}
+.set2-welcome-inner{background:linear-gradient(160deg,#3b0764,#0a0a0a 45%);border-radius:20px;
+  border:3px solid transparent;background-image:linear-gradient(160deg,#3b0764,#0a0a0a 45%),linear-gradient(135deg,#fcd34d 0%,#a16207 25%,#fcd34d 50%,#7c2d12 75%,#fcd34d 100%);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  padding:40px 32px;max-width:480px;width:100%;text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 60px rgba(252,211,77,.4);
+  animation:welcome-in .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes welcome-in{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.set2-welcome-badge{display:inline-block;background:linear-gradient(135deg,#fcd34d,#d97706);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:11px;font-weight:800;letter-spacing:3px;
+  padding:5px 16px;border-radius:14px;margin-bottom:16px}
+.set2-welcome-title{font-family:'Oswald',sans-serif;font-size:36px;font-weight:800;letter-spacing:6px;
+  background:linear-gradient(135deg,#fcd34d,#fff,#fcd34d);background-size:200% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shine 4s ease infinite;margin-bottom:14px}
+@keyframes shine{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+.set2-welcome-desc{color:#cbd5e1;font-size:14px;line-height:1.5;margin-bottom:18px}
+.set2-welcome-gift{color:#fcd34d;font-size:16px;font-weight:600;margin-bottom:24px}
+.set2-welcome-gift strong{font-weight:800}
+.set2-welcome-btn{padding:14px 36px;background:linear-gradient(135deg,#f5a623,#ffd700);color:#0a0a0a;
+  font-family:'Oswald',sans-serif;font-size:14px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  border:none;border-radius:30px;cursor:pointer;transition:.2s;box-shadow:0 8px 24px rgba(255,215,0,.45);
+  display:block;margin:0 auto 12px}
+.set2-welcome-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,215,0,.6)}
+.set2-welcome-skip{background:none;border:none;color:#64748b;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;padding:6px;font-family:'Oswald',sans-serif}
+.set2-welcome-skip:hover{color:#94a3b8}
+
+/* Sub-Header in Sammlung (Special tab Gruppen) */
+.coll-subhead{grid-column:1/-1;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:#fcd34d;padding:14px 4px 6px;
+  border-bottom:1px solid rgba(252,211,77,.18);margin-bottom:4px}
+.coll-subhead:first-child{padding-top:0}
+
+/* Set 2 Action-Theme auf Karten (sepia/gold "Memories") */
+.tc-mini.set2{
+  background:linear-gradient(160deg,#1c1917,#0a0a0a 45%) padding-box,
+  linear-gradient(135deg,#d4a574,#78350f,#fbbf24,#92400e) border-box;
+  border:2px solid transparent;
+  box-shadow:0 8px 24px rgba(120,53,15,.4),inset 0 0 0 1px rgba(252,211,77,.2)}
+.tc-mini.set2 .tc-mini-photo{height:78%;filter:saturate(.92) sepia(.1)}
+.tc-mini.set2 .tc-mini-grad{height:78%;background:linear-gradient(to bottom,rgba(10,10,10,0) 65%,rgba(10,10,10,.85) 93%,#0a0a0a 100%)}
+.tc-mini.set2.foil{
+  background:linear-gradient(160deg,#1c1917,#0a0a0a 45%) padding-box,
+  linear-gradient(135deg,#a855f7,#ec4899,#fbbf24,#06b6d4,#a855f7) border-box;
+  box-shadow:0 8px 28px rgba(168,85,247,.45),0 0 32px rgba(236,72,153,.25)}
+.tc-mini.set2.foil .tc-mini-photo{filter:saturate(1.05) brightness(1.05)}
 
 /* Sammlung */
 .coll-tabs{display:flex;gap:6px;justify-content:center;padding:0 20px 14px;flex-wrap:wrap}
@@ -1092,6 +1193,11 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
     </div>
 
     <div class="section" style="margin-top:24px"><div class="section-title">Meine Sammlung <span id="collMeta"></span></div></div>
+    <div class="set-filter">
+      <button class="set-filter-btn active" onclick="showSetFilter('all')" data-setf="all">🌟 Alle Sets</button>
+      <button class="set-filter-btn" onclick="showSetFilter('set1')" data-setf="set1">📘 Set 1</button>
+      <button class="set-filter-btn" onclick="showSetFilter('set2')" data-setf="set2">📕 Set 2 — Memories</button>
+    </div>
     <div class="coll-tabs">
       <button class="coll-tab active" onclick="showCollTab('standard')" data-coll="standard">Standard</button>
       <button class="coll-tab" onclick="showCollTab('foil')" data-coll="foil">Foil</button>
@@ -1114,6 +1220,18 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
 <!-- ENLARGED CARD OVERLAY (clickable collection items) -->
 <div class="card-zoom-overlay" id="cardZoomOverlay" onclick="closeCardZoom(event)">
   <div class="card-zoom-inner" id="cardZoomInner"></div>
+</div>
+
+<!-- SET 2 RELEASE POPUP -->
+<div class="set2-welcome" id="set2Welcome">
+  <div class="set2-welcome-inner">
+    <div class="set2-welcome-badge">🎉 NEW SET</div>
+    <h2 class="set2-welcome-title">SET 2 — MEMORIES</h2>
+    <p class="set2-welcome-desc">16 neue Karten · 9 Action-Variants · Specials, Events &amp; Lore aus dem Dortmund-Spiel und der Saison 2026.</p>
+    <p class="set2-welcome-gift"><strong>1 BONUS-PACK</strong> · 5 Set-2-Karten · Dein Daily-Pack bleibt verfügbar!</p>
+    <button class="set2-welcome-btn" onclick="claimSet2FreePack()">PACK BEANSPRUCHEN</button>
+    <button class="set2-welcome-skip" onclick="dismissSet2Welcome()">Später</button>
+  </div>
 </div>
 
 <!-- GAME MODAL -->
@@ -1285,7 +1403,8 @@ var GAMES = [
     pitcher_nums:[10,18,87],
     lineup:[22,76,46,9,2,35,18,43,10,87,72,64],
     mvp_num:18,
-    video_id:null,
+    video_id:"mni73rsZVAs",
+    video_short:true,
     notes:"Knappe Auswärtsniederlage"
   },
   {
@@ -2205,12 +2324,13 @@ function openGameModal(id,evt){
   }
   var videoHtml='';
   if(g.video_id){
-    var src='https://www.youtube.com/embed/'+g.video_id+'?rel=0&modestbranding=1&playsinline=1';
     var thumb='https://img.youtube.com/vi/'+g.video_id+'/maxresdefault.jpg';
     var wrapId='gv'+g.id;
     var embedSrc='https://www.youtube.com/embed/'+g.video_id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
-    videoHtml='<div class="gm-section"><div class="gm-sec-title">Spielaufzeichnung</div>'+
-      '<div class="yt-card"><div class="yt-embed-wrap" id="'+wrapId+'">'+
+    var shortCls=g.video_short?' yt-short':'';
+    var secTitle=g.video_short?'Highlight Short':'Spielaufzeichnung';
+    videoHtml='<div class="gm-section"><div class="gm-sec-title">'+secTitle+'</div>'+
+      '<div class="yt-card'+shortCls+'"><div class="yt-embed-wrap'+shortCls+'" id="'+wrapId+'">'+
         '<div class="yt-thumb-wrap" onclick="playYT(\''+wrapId+'\',\''+embedSrc+'\')">'+
           '<img src="'+thumb+'" alt="" onerror="this.src=\'https://img.youtube.com/vi/'+g.video_id+'/hqdefault.jpg\'">'+
           '<div class="yt-play-btn"><div class="yt-play-circle">'+
@@ -2339,13 +2459,48 @@ var SOFTBALL_PL = [
   {num:99, name:'ELKE BORGMANN',   photo:'sb_99.jpg'}
 ];
 
-// Special edition cards
+// ── SET 2 RELEASE FLAG ──
+var SET2_RELEASED = true;
+// Set 2 Action-Variants — alternative Spielerkarte mit Action-Foto.
+// Specials/Events/Lore aus Set 2 sind direkt im CARD_SPECIALS Pool unten.
+var SET2_ACTIONS = [
+  {num:17, team:'baseball', name:'JUF AT BAT',       subtitle:'AM SCHLAG · #17',                  photo:'s2_juf_atbat.jpg'},
+  {num:35, team:'baseball', name:'PUSCHI HEAT',      subtitle:'TATTOO ARM · PITCHER',             photo:'s2_puschi_pitch.jpg'},
+  {num:10, team:'baseball', name:'BASE DASH',        subtitle:'SPEEDSTER FELIX',                  photo:'s2_felix_dash.jpg'},
+  {num:21, team:'baseball', name:'STAND READY',      subtitle:'AT BAT · RENE',                    photo:'s2_rene_atbat.jpg'},
+  {num:2,  team:'baseball', name:'BEHIND THE PLATE', subtitle:'IRON MASK · TIM',                  photo:'s2_tim_catcher.jpg'},
+  {num:64, team:'baseball', name:'POWER STANCE',     subtitle:'BJÖRN GELADEN',                    photo:'s2_bjorn_power.jpg'},
+  {num:43, team:'baseball', name:'ON BASE',          subtitle:'SERHAN @ 1ST',                     photo:'s2_serhan_1st.jpg'},
+  {num:81, team:'softball', name:'AT THE PLATE',     subtitle:'JONAH · TAMARA ON DECK',           photo:'s2_jonah_atbat.jpg'},
+  {num:42, team:'softball', name:'WIND UP',          subtitle:'TAMARA · FIRE FROM THE CIRCLE',    photo:'s2_tamara_pitch.jpg'}
+];
+function findSet2Action(num,team){
+  team=team||'baseball';
+  for(var i=0;i<SET2_ACTIONS.length;i++){
+    var a=SET2_ACTIONS[i];
+    if(a.num===num && (a.team||'baseball')===team) return a;
+  }
+  return null;
+}
+
+// Premium-Pool — Specials, Events & Lore (kombiniert über alle Sets).
+// subtype: 'special' | 'event' | 'lore' steuert Sub-Header in der Sammlung.
 var CARD_SPECIALS = [
-  {id:'coach_denis', baseNum:15, name:'COACH DEKTYAROV', subtitle:'BASEBALL HEAD COACH', cls:'special coach'},
-  {id:'fireball_tim', baseNum:2, name:'FIREBALL ELFRINK', subtitle:'HOMERUN PACK', cls:'special fire'},
-  {id:'stealing_serhan', baseNum:43, name:'SERHAN SAHAN', subtitle:'STEAL KING · IN MOTION', cls:'special stealing', photo:'stealing_serhan.jpg'},
-  {id:'ukraine_danylo', baseNum:76, name:'DANYLO CHERKASHENKO', subtitle:'HEART OF UKRAINE 💙💛', cls:'special ukraine', photo:'ukraine_danylo.jpg'},
-  {id:'bbq_champs_2025', baseNum:null, name:'MIXED CHAMPS 2025', subtitle:'TEAM CHAMPIONSHIP 🏆', cls:'special champs', photo:'bbq_champs_2025.jpg'}
+  // ── SET 1 ──
+  {id:'coach_denis',     baseNum:15, name:'COACH DEKTYAROV',  subtitle:'BASEBALL HEAD COACH',         cls:'special coach',    subtype:'special', set:1},
+  {id:'fireball_tim',    baseNum:2,  name:'FIREBALL ELFRINK', subtitle:'HOMERUN PACK',                cls:'special fire',     subtype:'special', set:1},
+  {id:'stealing_serhan', baseNum:43, name:'SERHAN SAHAN',     subtitle:'STEAL KING · IN MOTION',      cls:'special stealing', subtype:'special', set:1, photo:'stealing_serhan.jpg'},
+  {id:'ukraine_danylo',  baseNum:76, name:'DANYLO CHERKASHENKO', subtitle:'HEART OF UKRAINE 💙💛',     cls:'special ukraine',  subtype:'lore',    set:1, photo:'ukraine_danylo.jpg'},
+  {id:'bbq_champs_2025', baseNum:null, name:'MIXED CHAMPS 2025', subtitle:'TEAM CHAMPIONSHIP 🏆',     cls:'special champs',   subtype:'event',   set:1, photo:'bbq_champs_2025.jpg'},
+
+  // ── SET 2 ──
+  {id:'mamacita_veyra',    baseNum:1,  name:'MAMACITA',         subtitle:'½ JAHRHUNDERT SOFTBALL · #1 VEYRA', cls:'special legend',    subtype:'special', set:2, photo:'s2_mamacita_veyra.jpg', video:'RuZQj2153fc', team:'softball'},
+  {id:'e_dortmund_huddle', baseNum:null, name:'TEAM HUDDLE',     subtitle:'DORTMUND · ZUSAMMEN STARK',         cls:'special champs',    subtype:'event',   set:2, photo:'s2_huddle_dortmund.jpg'},
+  {id:'e_jonah_safe',      baseNum:81,   name:'SAFE!',           subtitle:'JONAH @ 1ST · GAME MOMENT',          cls:'special champs',    subtype:'event',   set:2, photo:'s2_jonah_safe.jpg', team:'softball'},
+  {id:'l_denis_classic',   baseNum:15, name:'CLASSIC DENIS',     subtitle:'OUR COACH',                          cls:'special lore',      subtype:'lore',    set:2, photo:'s2_denis_portrait.jpg'},
+  {id:'l_denis_throwback', baseNum:15, name:'PLAYER DENIS',      subtitle:'BEFORE COACH · THROWBACK',           cls:'special lore',      subtype:'lore',    set:2, photo:'s2_denis_throwback.jpg'},
+  {id:'l_tim_dugout',      baseNum:2,  name:'GEAR DOWN',         subtitle:'DUGOUT TIM · OFF-DUTY',              cls:'special lore',      subtype:'lore',    set:2, photo:'s2_tim_dugout.jpg'},
+  {id:'l_elke_coach',      baseNum:99, name:'AWESOME COACH',     subtitle:'SOFTBALL · TRAINERIN ELKE',          cls:'special lore',      subtype:'lore',    set:2, photo:'s2_elke_coach.jpg', team:'softball'}
 ];
 
 // Drop weights
@@ -2377,23 +2532,34 @@ function findCardPlayer(card){
 }
 
 function rollPlayerCard(variant){
-  // Foil-Pool excludes baseballers without photos (placeholders look weird with foil shimmer)
-  var bbPool = (variant==='foil') ? PL.filter(function(p){return NO_PHOTO_NUMS.indexOf(p.num)<0;}) : PL;
-  var bb=bbPool.length, sb=SOFTBALL_PL.length;
-  var idx=Math.floor(Math.random()*(bb+sb));
-  if(idx<bb) return {kind:'player', variant:variant, num:bbPool[idx].num, team:'baseball'};
-  var p=SOFTBALL_PL[idx-bb];
-  return {kind:'player', variant:variant, num:p.num, team:'softball'};
+  // Pool aus Set 1 (BB+SB) + Set 2 Action-Karten. Foil-Pool ohne photoless BB.
+  var pool=[];
+  // Set 1 BB (Foil-Pool: nur mit Foto)
+  PL.forEach(function(p){
+    if(variant==='foil' && NO_PHOTO_NUMS.indexOf(p.num)>=0) return;
+    pool.push({num:p.num, team:'baseball', set:1});
+  });
+  // Set 1 SB
+  SOFTBALL_PL.forEach(function(p){ pool.push({num:p.num, team:'softball', set:1}); });
+  // Set 2 Action-Variants (immer mit Foto, daher beide Variants OK)
+  if(SET2_RELEASED){
+    SET2_ACTIONS.forEach(function(a){ pool.push({num:a.num, team:a.team||'baseball', set:2}); });
+  }
+  var pick=pool[Math.floor(Math.random()*pool.length)];
+  return {kind:'player', variant:variant, num:pick.num, team:pick.team, set:pick.set};
 }
 function rollSpecialCard(){
-  var s=CARD_SPECIALS[Math.floor(Math.random()*CARD_SPECIALS.length)];
+  // Specials-Pool nur Set 1 + (wenn released) Set 2.
+  var pool=CARD_SPECIALS.filter(function(s){return s.set!==2 || SET2_RELEASED;});
+  var s=pool[Math.floor(Math.random()*pool.length)];
   return { kind:'special', specialId:s.id };
 }
 
 function cardId(card){
   if(card.kind==='player'){
     var prefix=card.team==='softball'?'s':'p';
-    return prefix+card.num+'_'+card.variant;
+    var setSuffix=card.set===2?'_s2':'';
+    return prefix+card.num+'_'+card.variant+setSuffix;
   }
   return 'sp_'+card.specialId;
 }
@@ -2405,35 +2571,48 @@ function buildCardEl(card,opts){
   if(card.kind==='player'){
     var p=findCardPlayer(card);
     if(!p) return '';
-    var photoSrc=p.photo||(p.num+'.jpg');
+    var isSet2=card.set===2;
+    var action=isSet2?findSet2Action(card.num,card.team):null;
+    if(isSet2 && !action) return ''; // Set 2 player card aber keine Action-Variante definiert
+    var photoSrc = isSet2 ? action.photo : (p.photo||(p.num+'.jpg'));
+    var displayName = isSet2 ? action.name : p.name;
+    var displaySub = isSet2 ? action.subtitle : null;
     var teamCls=card.team==='softball'?' is-sb':'';
     var foilCls=card.variant==='foil'?' foil':'';
+    var setCls=isSet2?' set2':'';
     if(locked){
-      return '<div class="tc-mini locked'+teamCls+(card.variant==='foil'?' foil-locked':'')+'">'+
+      return '<div class="tc-mini locked'+teamCls+setCls+(card.variant==='foil'?' foil-locked':'')+'">'+
         '<div class="tc-mini-locked-content">'+
           '<div class="lock-num">#'+p.num+'</div>'+
-          '<div class="lock-name">'+p.name.split('(')[0].trim()+'</div>'+
+          '<div class="lock-name">'+(isSet2?displayName:p.name.split('(')[0].trim())+'</div>'+
+          (isSet2?'<div class="tc-mini-tag" style="position:static;margin-top:4px;background:rgba(217,119,6,.18);color:#fbbf24">SET 2</div>':'')+
           (card.team==='softball'?'<div class="tc-mini-tag" style="position:static;margin-top:4px;background:rgba(255,215,0,.18);color:#ffd700">SOFTBALL</div>':'')+
           (card.variant==='foil'?'<div class="tc-mini-tag" style="position:static;margin-top:4px">FOIL</div>':'')+
         '</div></div>';
     }
-    var stats=(p.games>0)
+    var stats=(!isSet2 && p.games>0)
       ? '<div class="tc-mini-stats">'+
           '<div class="tc-mini-stat"><div class="tc-mini-stat-v">'+a3(p.avg)+'</div><div class="tc-mini-stat-l">AVG</div></div>'+
           '<div class="tc-mini-stat"><div class="tc-mini-stat-v">'+p.h+'</div><div class="tc-mini-stat-l">H</div></div>'+
         '</div>':'';
-    var noPhoto = card.team!=='softball' && NO_PHOTO_NUMS.indexOf(p.num)>=0;
+    var noPhoto = !isSet2 && card.team!=='softball' && NO_PHOTO_NUMS.indexOf(p.num)>=0;
     var photoBlock = noPhoto
       ? '<div class="tc-mini-photo no-photo"><div class="ph-bg"></div><div class="ph-num">#'+p.num+'</div></div>'
       : '<div class="tc-mini-photo"><img src="'+photoSrc+'" alt="" onerror="this.style.display=\'none\'"></div>';
-    return '<div class="tc-mini'+foilCls+teamCls+(noPhoto?' no-photo-card':'')+'">'+
+    var topTag='';
+    if(isSet2) topTag='<div class="tc-mini-tag" style="background:linear-gradient(135deg,#fbbf24,#92400e);color:#0a0a0a;font-weight:700">⚡ S2</div>';
+    else if(card.team==='softball') topTag='<div class="tc-mini-tag" style="background:rgba(255,215,0,.25);color:#ffd700;font-weight:700">SB</div>';
+    else if(card.variant==='foil') topTag='<div class="tc-mini-tag">FOIL</div>';
+    var leftTag='';
+    if(card.variant==='foil' && (isSet2||card.team==='softball')) leftTag='<div class="tc-mini-tag" style="left:8px;right:auto">FOIL</div>';
+    return '<div class="tc-mini'+foilCls+teamCls+setCls+(noPhoto?' no-photo-card':'')+'">'+
       photoBlock+
       '<div class="tc-mini-grad"></div>'+
       '<div class="tc-mini-num">#'+p.num+'</div>'+
-      (card.team==='softball'?'<div class="tc-mini-tag" style="background:rgba(255,215,0,.25);color:#ffd700;font-weight:700">SB</div>':(card.variant==='foil'?'<div class="tc-mini-tag">FOIL</div>':''))+
-      (card.team==='softball'&&card.variant==='foil'?'<div class="tc-mini-tag" style="left:8px;right:auto">FOIL</div>':'')+
+      topTag+leftTag+
       '<div class="tc-mini-info">'+
-        '<div class="tc-mini-name">'+p.name+'</div>'+
+        '<div class="tc-mini-name">'+displayName+'</div>'+
+        (displaySub?'<div class="tc-mini-sub" style="font-size:8px;color:#fbbf24;letter-spacing:1px;margin-top:2px">'+displaySub+'</div>':'')+
         stats+
       '</div>'+
       (count>1?'<div class="tc-mini-count">×'+count+'</div>':'')+
@@ -2696,9 +2875,15 @@ function updateCooldownUI(){
 setInterval(updateCooldownUI,1000);
 
 var currentCollTab='standard';
+var currentSetFilter='all'; // 'all' | 'set1' | 'set2'
 function showCollTab(name){
   currentCollTab=name;
   document.querySelectorAll('.coll-tab').forEach(function(t){t.classList.toggle('active',t.dataset.coll===name);});
+  renderCollection();
+}
+function showSetFilter(name){
+  currentSetFilter=name;
+  document.querySelectorAll('.set-filter-btn').forEach(function(b){b.classList.toggle('active',b.dataset.setf===name);});
   renderCollection();
 }
 
@@ -2721,31 +2906,63 @@ function renderCollection(){
     if(locked) return inner;
     var dataKind=card.kind;
     var dataExtra=card.kind==='player'
-      ?('data-num="'+card.num+'" data-variant="'+card.variant+'" data-team="'+(card.team||'baseball')+'"')
+      ?('data-num="'+card.num+'" data-variant="'+card.variant+'" data-team="'+(card.team||'baseball')+'" data-set="'+(card.set||1)+'"')
       :('data-special="'+card.specialId+'"');
     return '<div class="coll-clickable" data-kind="'+dataKind+'" '+dataExtra+' data-count="'+cnt+'">'+inner+'</div>';
   }
-  function addPlayer(p,team,variant){
+  function addPlayer(p,team,variant,set){
+    set=set||1;
+    if(set===2 && !findSet2Action(p.num,team)) return; // kein Set-2-Eintrag → skip
     total++;
-    var card={kind:'player',variant:variant,num:p.num,team:team};
+    var card={kind:'player',variant:variant,num:p.num,team:team,set:set};
     var id=cardId(card), cnt=COLL.cards[id]||0;
     if(cnt>0) owned++;
     html+=cardWrapped(card,cnt===0,cnt);
   }
+  function showSet1(){return currentSetFilter==='all'||currentSetFilter==='set1';}
+  function showSet2(){return SET2_RELEASED && (currentSetFilter==='all'||currentSetFilter==='set2');}
   if(currentCollTab==='standard'){
-    PL.forEach(function(p){addPlayer(p,'baseball','normal');});
-    SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','normal');});
+    if(showSet1()){
+      PL.forEach(function(p){addPlayer(p,'baseball','normal',1);});
+      SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','normal',1);});
+    }
+    if(showSet2()){
+      SET2_ACTIONS.forEach(function(a){
+        var teamPool=a.team==='softball'?SOFTBALL_PL:PL;
+        for(var i=0;i<teamPool.length;i++){if(teamPool[i].num===a.num){addPlayer(teamPool[i],a.team||'baseball','normal',2);break;}}
+      });
+    }
   } else if(currentCollTab==='foil'){
-    // Foil tab: only players with photos (others can't be pulled as foil anyway)
-    PL.forEach(function(p){if(NO_PHOTO_NUMS.indexOf(p.num)<0) addPlayer(p,'baseball','foil');});
-    SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','foil');});
+    if(showSet1()){
+      PL.forEach(function(p){if(NO_PHOTO_NUMS.indexOf(p.num)<0) addPlayer(p,'baseball','foil',1);});
+      SOFTBALL_PL.forEach(function(p){addPlayer(p,'softball','foil',1);});
+    }
+    if(showSet2()){
+      SET2_ACTIONS.forEach(function(a){
+        var teamPool=a.team==='softball'?SOFTBALL_PL:PL;
+        for(var i=0;i<teamPool.length;i++){if(teamPool[i].num===a.num){addPlayer(teamPool[i],a.team||'baseball','foil',2);break;}}
+      });
+    }
   } else {
-    CARD_SPECIALS.forEach(function(s){
-      total++;
-      var card={kind:'special',specialId:s.id};
-      var id=cardId(card), cnt=COLL.cards[id]||0;
-      if(cnt>0) owned++;
-      html+=cardWrapped(card,cnt===0,cnt);
+    // Special tab — gruppiert nach subtype mit Sub-Headers
+    var subtypeOrder=['special','event','lore'];
+    var subtypeLabels={special:'⭐ Specials', event:'🏆 Events', lore:'📖 Lore'};
+    subtypeOrder.forEach(function(st){
+      var entries=CARD_SPECIALS.filter(function(s){
+        if(s.subtype!==st) return false;
+        if(s.set===2 && !showSet2()) return false;
+        if(s.set===1 && !showSet1()) return false;
+        return true;
+      });
+      if(!entries.length) return;
+      html+='<div class="coll-subhead">'+subtypeLabels[st]+'</div>';
+      entries.forEach(function(s){
+        total++;
+        var card={kind:'special',specialId:s.id};
+        var id=cardId(card), cnt=COLL.cards[id]||0;
+        if(cnt>0) owned++;
+        html+=cardWrapped(card,cnt===0,cnt);
+      });
     });
   }
   meta.textContent=owned+' / '+total+' gesammelt';
@@ -2758,7 +2975,7 @@ function renderCollection(){
       var cnt=parseInt(this.getAttribute('data-count'),10)||1;
       var card;
       if(k==='player'){
-        card={kind:'player',variant:this.getAttribute('data-variant'),num:parseInt(this.getAttribute('data-num'),10),team:this.getAttribute('data-team')||'baseball'};
+        card={kind:'player',variant:this.getAttribute('data-variant'),num:parseInt(this.getAttribute('data-num'),10),team:this.getAttribute('data-team')||'baseball',set:parseInt(this.getAttribute('data-set'),10)||1};
       } else {
         card={kind:'special',specialId:this.getAttribute('data-special')};
       }
@@ -2769,6 +2986,61 @@ function renderCollection(){
 
 renderCollection();
 updateCooldownUI();
+
+// Set 2 Welcome auf erstem Besuch nach Release
+function showSet2Welcome(){
+  document.getElementById('set2Welcome').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function dismissSet2Welcome(){
+  // "Später" → Popup zu, aber Flag NICHT setzen → kommt beim nächsten Besuch wieder
+  document.getElementById('set2Welcome').classList.remove('open');
+  document.body.style.overflow='';
+}
+// Bonus-Pack mit 5 Set-2-Karten — beeinflusst NICHT den Daily-Cooldown
+function openSet2WelcomePack(){
+  var pulled=[];
+  // 3 Set-2 Action Standard
+  for(var i=0;i<3;i++){
+    var a=SET2_ACTIONS[Math.floor(Math.random()*SET2_ACTIONS.length)];
+    pulled.push({kind:'player', variant:'normal', num:a.num, team:a.team||'baseball', set:2});
+  }
+  // 1 Set-2 Action Foil
+  var af=SET2_ACTIONS[Math.floor(Math.random()*SET2_ACTIONS.length)];
+  pulled.push({kind:'player', variant:'foil', num:af.num, team:af.team||'baseball', set:2});
+  // 1 Set-2 Special/Event/Lore garantiert
+  var s2pool=CARD_SPECIALS.filter(function(s){return s.set===2;});
+  var sp=s2pool[Math.floor(Math.random()*s2pool.length)];
+  pulled.push({kind:'special', specialId:sp.id});
+  // Sammlung speichern (KEIN lastPackTime-Update → Daily-Timer bleibt unangetastet)
+  pulled.forEach(function(c){
+    var id=cardId(c);
+    COLL.cards[id]=(COLL.cards[id]||0)+1;
+  });
+  COLL.totalPacks=(COLL.totalPacks||0)+1;
+  saveCollection(COLL);
+  renderCollection();
+  startPackReveal(pulled);
+}
+
+function claimSet2FreePack(){
+  // Flag setzen, Popup schließen
+  try{localStorage.setItem('flying-bats-set2-seen','1');}catch(e){}
+  document.getElementById('set2Welcome').classList.remove('open');
+  document.body.style.overflow='';
+  // Scrollen zum Pack-Bereich, dann Bonus-Pack öffnen
+  setTimeout(function(){
+    document.getElementById('sec-pack').scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(openSet2WelcomePack,600);
+  },200);
+}
+if(SET2_RELEASED){
+  try{
+    if(!localStorage.getItem('flying-bats-set2-seen')){
+      setTimeout(showSet2Welcome,500);
+    }
+  }catch(e){}
+}
 
 // auto-scroll to grid when searching on mobile
 document.getElementById('search').addEventListener('focus',function(){
