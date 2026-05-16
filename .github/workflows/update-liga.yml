@@ -1,0 +1,36 @@
+name: Update Liga Tables
+
+on:
+  schedule:
+    # alle 3 Stunden
+    - cron: '0 */3 * * *'
+  workflow_dispatch:  # Manueller Trigger über Actions-Tab
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run scraper
+        run: python scripts/scrape_liga.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain index.html)" ]]; then
+            git add index.html
+            git commit -m "chore: auto-update liga tables [skip ci]"
+            git push
+          else
+            echo "Keine Aenderungen."
+          fi
