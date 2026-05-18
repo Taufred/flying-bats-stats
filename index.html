@@ -1102,6 +1102,33 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
   .gm-score{font-size:42px}
   .gm-stat-row{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ── GAME MODAL container (mobile-safe) ── */
+#gameModal{background:#0a0a0a;border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 32px 80px rgba(0,0,0,.85);
+  max-height:92vh;overflow-y:auto;overflow-x:hidden;position:relative;
+  -webkit-overflow-scrolling:touch}
+#gameModal::-webkit-scrollbar{width:4px}
+#gameModal::-webkit-scrollbar-thumb{background:rgba(255,215,0,.25);border-radius:2px}
+#gameModal > .modal-close{position:sticky;top:10px;float:right;margin:10px 10px -34px 0;z-index:20}
+body.in-iframe #gameModal{max-height:none;overflow:visible}
+@media(max-width:600px){
+  #gameModal{max-height:88vh;border-radius:14px}
+  .gm-hero{padding:22px 16px 14px}
+  .gm-body{padding:12px 14px 22px}
+  .gm-wl{font-size:26px}
+  .gm-score{font-size:34px}
+  .gm-vs{font-size:13px}
+  .gm-meta{font-size:10px;letter-spacing:1px}
+  .gm-stat-row{grid-template-columns:repeat(2,1fr);gap:6px}
+  .gm-stat-v{font-size:20px}
+  .gm-stat-l{font-size:8px}
+  .gm-chip{padding:5px 9px;font-size:11px}
+  .gm-perf{padding:8px 10px}
+  .gm-perf-name{font-size:12px}
+  .gm-perf-stats{font-size:10.5px}
+}
 </style>
 </head>
 <body>
@@ -1349,15 +1376,16 @@ var LEAGUES = {
     name: "Bezirksliga Herren", icon:"⚾", season: 2026, our_team: OUR_TEAM,
     source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6370&bsm_season=2026",
     standings: [
-      {pos:1, team:"Duisburg Flying Bats e.V.", w:3, l:1, pct:0.750, streak:"—"},
-      {pos:2, team:"Düsseldorf Senators 2", w:2, l:1, pct:0.667, streak:"—"},
-      {pos:3, team:"Wassenberg Squirrels", w:2, l:1, pct:0.667, streak:"—"},
-      {pos:4, team:"Krefeld Crows", w:2, l:1, pct:0.667, streak:"—"},
-      {pos:5, team:"Neunkirchen Nightmares 3", w:2, l:1, pct:0.667, streak:"—"},
-      {pos:6, team:"Kapellen Turtles", w:0, l:3, pct:0.000, streak:"—"},
-      {pos:7, team:"Dortmund Wanderers 3", w:0, l:3, pct:0.000, streak:"—"}
+      {pos:1, team:"Neunkirchen Nightmares 3", w:2, l:0, pct:1.000, streak:"—"},
+      {pos:2, team:"Duisburg Flying Bats e.V.", w:2, l:1, pct:0.667, streak:"—"},
+      {pos:3, team:"Düsseldorf Senators 2", w:2, l:1, pct:0.667, streak:"—"},
+      {pos:4, team:"Wassenberg Squirrels", w:1, l:1, pct:0.500, streak:"—"},
+      {pos:5, team:"Krefeld Crows", w:1, l:1, pct:0.500, streak:"—"},
+      {pos:6, team:"Kapellen Turtles", w:0, l:2, pct:0.000, streak:"—"},
+      {pos:7, team:"Dortmund Wanderers 3", w:0, l:2, pct:0.000, streak:"—"}
     ],
     schedule: [
+      {date:"2026-05-17", time:"—", home:"Kapellen Turtles", away:"Duisburg Flying Bats e.V.", result:"-"},
       {date:"2026-06-06", time:"—", home:"Wassenberg Squirrels", away:"Duisburg Flying Bats e.V.", result:"-"},
       {date:"2026-06-28", time:"—", home:"Duisburg Flying Bats e.V.", away:"Neunkirchen Nightmares 3", result:"-"},
       {date:"2026-07-04", time:"—", home:"Duisburg Flying Bats e.V.", away:"Düsseldorf Senators 2", result:"-"},
@@ -1372,15 +1400,15 @@ var LEAGUES = {
     name: "Mixed Softball Liga", icon:"🥎", season: 2026, our_team: OUR_TEAM_SB,
     source_url: "https://www.bsvnrw.de/ligadetails/?bsm_league=6258&bsm_season=2026",
     standings: [
-      {pos:1, team:"Untouchables Paderborn", w:5, l:0, pct:1.000, streak:"—"},
+      {pos:1, team:"Untouchables Paderborn", w:3, l:0, pct:1.000, streak:"—"},
       {pos:2, team:"Duisburg Flying Bats e.V. 2", w:2, l:0, pct:1.000, streak:"—"},
       {pos:3, team:"Bottrop Blackjacks", w:1, l:1, pct:0.500, streak:"—"},
       {pos:4, team:"Hausdülmen Thunderducks", w:1, l:2, pct:0.333, streak:"—"},
-      {pos:5, team:"Wesseling Vermins 5", w:1, l:3, pct:0.250, streak:"—"},
+      {pos:5, team:"SG Ennepetal Raccoons/Dortmund Rhinos", w:0, l:0, pct:0.000, streak:"—"},
       {pos:6, team:"Herne Lizards", w:0, l:0, pct:0.000, streak:"—"},
       {pos:7, team:"BSC Hickory", w:0, l:0, pct:0.000, streak:"—"},
-      {pos:8, team:"Cologne Cardinals", w:0, l:2, pct:0.000, streak:"—"},
-      {pos:9, team:"SG Ennepetal Raccoons/Dortmund Rhinos", w:0, l:2, pct:0.000, streak:"—"}
+      {pos:8, team:"Wesseling Vermins 5", w:0, l:2, pct:0.000, streak:"—"},
+      {pos:9, team:"Cologne Cardinals", w:0, l:2, pct:0.000, streak:"—"}
     ],
     schedule: [
       {date:"2026-05-31", time:"—", home:"Cologne Cardinals", away:"Duisburg Flying Bats e.V. 2", result:"-"},
