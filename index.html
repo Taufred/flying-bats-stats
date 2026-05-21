@@ -2130,8 +2130,8 @@ function buildTabStats(p){
       '<div class="ks-cell"><div class="ks-v">'+p.rbi+'</div><div class="ks-l">RBI</div></div>'+
       '<div class="ks-cell"><div class="ks-v">'+(p.ops>0?a3(p.ops):'-')+'</div><div class="ks-l">OPS</div></div>'+
     '</div>'+
-    '<div class="srow" style="grid-template-columns:repeat(4,1fr);margin-top:10px">'+
-      sc('Spiele',p.games)+sc('PA',p.pa)+sc('Runs',p.runs)+sc('SB',p.sb,p.sb>=2?'hi':'')+
+    '<div class="srow" style="grid-template-columns:repeat(5,1fr);margin-top:10px">'+
+      sc('Spiele',p.games)+sc('PA',p.pa)+sc('Runs',p.runs)+sc('TB-Pkt',p.tb_pts,p.tb_pts>=5?'hi':'')+sc('SB',p.sb,p.sb>=2?'hi':'')+
     '</div>';
   } else {
     html='<div class="no-data" style="text-align:center;padding:20px 0">Noch kein Einsatz in dieser Saison.</div>';
@@ -2177,10 +2177,10 @@ function buildTabDefense(p){
     if(f.ip>0){
       html+='<div class="sblock"><div class="sblock-title">Pitching</div>'+
         '<div class="srow" style="grid-template-columns:repeat(5,1fr)">'+
-          sc('IP',f.ip)+sc('W',f.w,f.w>0?'go':'')+sc('L',f.l)+sc('SO',f.so,f.so>=5?'hi':'')+sc('BB',f.bb)+
+          sc('IP',f.ip)+sc('W',f.w,f.w>0?'go':'')+sc('L',f.l)+sc('SO',f.so,f.so>=5?'hi':'')+sc('ERA',f.era?f.era.toFixed(2):'-',f.era>0&&f.era<3?'hi':'')+
         '</div>'+
-        '<div class="srow" style="grid-template-columns:repeat(4,1fr)">'+
-          sc('H',f.h)+sc('R',f.r)+sc('HBP',f.hbp)+sc('WP',f.wp)+
+        '<div class="srow" style="grid-template-columns:repeat(5,1fr)">'+
+          sc('BB',f.bb)+sc('H',f.h)+sc('R',f.r)+sc('HBP',f.hbp)+sc('WP',f.wp)+
         '</div>'+
       '</div>';
     }
@@ -2277,9 +2277,10 @@ function render(){
 }
 
 // ── LEADERBOARDS ──
-function buildLeaderboard(cat,label,fn,fmt,minGames){
-  var elig=PL.filter(function(p){return p.games>=(minGames||1)&&fn(p)>0;});
-  elig.sort(function(a,b){return fn(b)-fn(a);});
+function buildLeaderboard(cat,label,fn,fmt,minGames,opts){
+  opts=opts||{};
+  var elig=PL.filter(function(p){var v=fn(p);return p.games>=(minGames||1)&&(opts.reverse?v>0:v>0);});
+  elig.sort(function(a,b){return opts.reverse?fn(a)-fn(b):fn(b)-fn(a);});
   var top=elig.slice(0,5);
   var rows='';
   if(!top.length){rows='<div class="lb-empty">Noch keine Daten</div>';}
@@ -2301,10 +2302,14 @@ function renderLeaderboards(){
   var html='';
   html+=buildLeaderboard('AVG','Batting Average',function(p){return p.avg;},function(v){return a3(v);},1);
   html+=buildLeaderboard('OPS','On-base + Slugging',function(p){return p.ops;},function(v){return a3(v);},1);
+  html+=buildLeaderboard('SLG','Slugging Percentage',function(p){return p.slg;},function(v){return a3(v);},1);
   html+=buildLeaderboard('RBI','Runs Batted In',function(p){return p.rbi;},function(v){return v;});
+  html+=buildLeaderboard('R','Runs Scored',function(p){return p.runs;},function(v){return v;});
   html+=buildLeaderboard('SB','Stolen Bases',function(p){return p.sb;},function(v){return v;});
   html+=buildLeaderboard('HITS','Hits',function(p){return p.h;},function(v){return v;});
+  html+=buildLeaderboard('TB','Total-Base-Punkte',function(p){return p.tb_pts;},function(v){return v;});
   html+=buildLeaderboard('K','Strikeouts (Pitcher)',function(p){return p.fielding&&p.fielding.so?p.fielding.so:0;},function(v){return v;});
+  html+=buildLeaderboard('ERA','Earned Run Avg (min 1 IP)',function(p){return p.fielding&&p.fielding.era?p.fielding.era:0;},function(v){return v.toFixed(2);},1,{reverse:true});
   document.getElementById('leaderboards').innerHTML=html;
 }
 
