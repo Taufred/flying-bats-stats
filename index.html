@@ -1106,6 +1106,8 @@ body.in-iframe .pack-stage,body.in-iframe .card-zoom-overlay{position:absolute;i
 
 /* ── Spielbericht (Scoresheet-Thumbs + Lightbox) ── */
 .gm-sheets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gm-sheets.single{grid-template-columns:1fr}
+.gm-sheets.single .gm-sheet img{height:180px;object-position:center}
 .gm-sheet{position:relative;border-radius:8px;overflow:hidden;cursor:zoom-in;
   background:#1a1a1a;border:1px solid rgba(255,255,255,.06);transition:.2s}
 .gm-sheet:hover{border-color:rgba(255,215,0,.4);transform:translateY(-2px)}
@@ -1508,13 +1510,25 @@ var GAMES = [
     notes:"Comeback nach 3:7-Rückstand · Pusch shutdown im Relief · Turbo-Kids drehen das Spiel"
   },
   {
-    id:6, date:"2026-07-04", opponent:"Düsseldorf Senators 2", venue:"Düsseldorf",
+    id:6, date:"2026-06-28", opponent:"Neunkirchen Nightmares 3", venue:"Neunkirchen-Seelscheid",
+    home:true, score_us:18, score_them:20,
+    hits_us:8, errors_us:8, hits_them:9, errors_them:7,
+    spielnr:"13227", liga:"BZL H2",
+    pitcher_nums:[10,35,18,87,15],
+    lineup:[22,10,35,9,43,15,2,17,46,21,87,16,18],
+    video_id:"5RAwAmiPooU",
+    video_short:true,
+    scoresheet:["scoresheets/g6_both.jpg"],
+    notes:"Knappe Niederlage · 18 Runs waren fast genug · offene Schlagfestspiele in Neunkirchen"
+  },
+  {
+    id:7, date:"2026-07-04", opponent:"Düsseldorf Senators 2", venue:"Düsseldorf",
     home:true, score_us:13, score_them:20,
     hits_us:11, errors_us:12, hits_them:7, errors_them:11,
     spielnr:"13230", liga:"BZL H2",
     pitcher_nums:[35,18,10,87],
     lineup:[35,9,10,87,43,18,64,22,15,16,32],
-    scoresheet:["scoresheets/g6_bats.jpg","scoresheets/g6_opp.jpg"],
+    scoresheet:["scoresheets/g7_bats.jpg","scoresheets/g7_opp.jpg"],
     notes:"Chaotisches Spiel · 12 Errors · Aufgabe im 7. Inning bei 10-Run-Rückstand · Missglückter Rundown im 6."
   }
 ];
@@ -2478,8 +2492,11 @@ function openGameModal(id,evt){
       (pitchers?'<div class="gm-section"><div class="gm-sec-title">Pitcher</div><div class="gm-chips">'+pitchers+'</div></div>':'')+
       '<div class="gm-section"><div class="gm-sec-title">Aufgebot ('+(g.lineup?g.lineup.length:0)+' Spieler)</div><div class="gm-chips">'+lineupHtml+'</div></div>'+
       (g.scoresheet&&g.scoresheet.length?
-        '<div class="gm-section"><div class="gm-sec-title">Spielbericht (DBV-Bogen)</div><div class="gm-sheets">'+
-        g.scoresheet.map(function(s,i){return '<div class="gm-sheet" onclick="openSheet(\''+s+'\')"><img src="'+s+'" alt="Spielbericht" loading="lazy"><span class="gm-sheet-label">'+(i===0?'Bats':'Gegner')+'</span></div>';}).join('')+
+        '<div class="gm-section"><div class="gm-sec-title">Spielbericht (DBV-Bogen)</div><div class="gm-sheets'+(g.scoresheet.length===1?' single':'')+'">'+
+        g.scoresheet.map(function(s,i){
+          var lbl=g.scoresheet.length===1?'Bogen':(i===0?'Bats':'Gegner');
+          return '<div class="gm-sheet" onclick="openSheet(\''+s+'\')"><img src="'+s+'" alt="Spielbericht" loading="lazy"><span class="gm-sheet-label">'+lbl+'</span></div>';
+        }).join('')+
         '</div></div>':'')+
       videoHtml+
     '</div>';
